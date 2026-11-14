@@ -1,95 +1,200 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <script>
-      (function() {
-        try {
-          var win = typeof window !== 'undefined' ? window : null;
-          if (!win) return;
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0e2f33">
+<title>ReMed — controle de remédios grátis, privado e offline</title>
+<meta name="description" content="ReMed é um app gratuito, privado e offline: doses do dia, controle de estoque, pedido na farmácia pelo WhatsApp, Google Agenda, caderno de saúde e ficha SOS. Sem cadastro e sem anúncios.">
+<meta name="author" content="Saulomgg">
+<link rel="canonical" href="https://remedapp.github.io/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="ReMed">
+<meta property="og:title" content="ReMed — seus remédios no horário certo">
+<meta property="og:description" content="Doses, estoque, WhatsApp, Google Agenda e ficha SOS. Grátis, privado e offline.">
+<meta property="og:url" content="https://remedapp.github.io/"><meta property="og:image" content="https://remedapp.github.io/img/icon-512.png">
+<link rel="icon" type="image/png" href="img/icon-192.png"><link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0e2f33;--leaf:#1f8f86;--coral:#e9785b;--cream:#fbf8f1;--muted:#62736f;--line:#e3e8e2;--gold:#f0c977;--crit:#d9534f}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:var(--cream);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}.wrap{max-width:1120px;margin:auto;padding:0 24px}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;line-height:1.12}
+.nav{position:sticky;top:0;z-index:10;background:rgba(251,248,241,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(14,47,51,.08)}
+.nav-in{height:72px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800;font-size:18px}.brand em{font-style:normal;color:var(--coral)}
+.mark{width:38px;height:38px;border-radius:13px;background:var(--ink);color:var(--gold);display:grid;place-items:center;font:800 17px Georgia,serif}
+.links{display:flex;align-items:center;gap:22px;color:var(--muted);font-size:14px;font-weight:600}.links a:hover{color:var(--ink)}
+.button,.nav-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:12px 20px;background:var(--coral);color:#fff!important;font-weight:800;box-shadow:0 8px 18px #e9785b30;transition:transform .15s}
+.button:hover,.nav-cta:hover{transform:translateY(-2px)}.secondary{background:transparent;color:var(--ink)!important;border:1px solid var(--ink);box-shadow:none}
+.menu{display:none;background:none;border:0;color:var(--ink);font-size:26px}
+.hero{padding:84px 0 70px;background:radial-gradient(circle at 88% 12%,#f0c97766,transparent 30%),linear-gradient(135deg,#fbf8f1,#e6f3ef)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+.eyebrow{color:var(--coral);font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:800;margin-bottom:14px}
+.hero h1{font-size:clamp(40px,6vw,70px);margin-bottom:22px}.hero h1 em{color:var(--coral);font-style:normal}
+.lead{font-size:19px;color:var(--muted);max-width:560px;margin-bottom:28px}.actions{display:flex;gap:12px;flex-wrap:wrap}
+.proof{display:flex;gap:24px;flex-wrap:wrap;margin-top:28px;color:var(--muted);font-size:13px}.proof strong{display:block;color:var(--ink);font-size:17px}
+.phone{background:var(--ink);border-radius:34px;padding:12px;max-width:330px;margin:auto;box-shadow:0 28px 70px #0e2f3340;transform:rotate(2deg)}
+.screen{background:#f6f7f2;border-radius:24px;padding:16px}
+.mini{background:#fff;border:1px solid var(--line);border-radius:16px;padding:11px 13px;margin-top:9px;font-size:14px;display:flex;align-items:center;gap:11px}
+.mini time{font-weight:800;color:var(--leaf);font-size:13px;min-width:42px}.mini span{flex:1;line-height:1.3}.mini small{display:block;color:var(--muted);font-size:12px}
+.ck{width:24px;height:24px;border-radius:50%;background:var(--leaf);color:#fff;display:grid;place-items:center;font-size:12px;flex:none}.ck.o{background:none;border:2px solid var(--line)}
+.pie{width:60px;height:60px;border-radius:50%;background:conic-gradient(var(--gold) 0 50%,#ffffff26 0);display:grid;place-items:center;flex:none}.pie b{width:44px;height:44px;border-radius:50%;background:var(--ink);display:grid;place-items:center;font-size:13px;color:#fff}
+.ringc{display:flex;gap:13px;align-items:center;background:var(--ink);color:#fff;border-radius:20px;padding:14px;margin-top:12px}.ringc small{color:#b9d3cf}
+.strip{background:var(--ink);color:#fff;padding:26px 0}.strip .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center}.strip b{display:block;font:700 28px 'Playfair Display';color:var(--gold)}.strip span{font-size:13px;color:#b9d3cf}
+.section{padding:84px 0}.soft{background:#fff}
+.head{text-align:center;max-width:700px;margin:0 auto 52px}.head h2{font-size:clamp(30px,4vw,46px);margin-bottom:14px}.head p{color:var(--muted);font-size:17px}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-bottom:84px}.f:last-child{margin-bottom:0}.f.rev .txt{order:2}
+.tag{display:inline-flex;align-items:center;gap:8px;background:#d8efe9;color:#14675f;border-radius:999px;padding:5px 13px;font-size:12px;font-weight:800;margin-bottom:14px}
+.txt h3{font-size:clamp(26px,3.4vw,38px);margin-bottom:12px}.txt>p{color:var(--muted);font-size:17px;margin-bottom:18px}
+.ul{list-style:none;display:grid;gap:10px}.ul li{display:flex;gap:10px;font-size:15px}.ul li:before{content:"✓";color:var(--leaf);font-weight:900}
+.mock{background:linear-gradient(145deg,#eaf5f1,#fff4e8);border:1px solid var(--line);border-radius:30px;padding:26px;display:grid;gap:10px}
+.m{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;font-size:14px;box-shadow:0 6px 18px rgba(14,47,51,.06)}
+.m b{font-weight:800}.m small{color:var(--muted)}
+.bar{height:9px;border-radius:99px;background:#e6efe9;overflow:hidden;margin:8px 0 4px}.bar i{display:block;height:100%;border-radius:99px;background:var(--leaf)}.bar.w i{background:#e0a21b}.bar.c i{background:var(--crit)}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:800;background:#d8efe9;color:#14675f}.pill.c{background:#fde8e6;color:#b3261e}.pill.w{background:#fdf3d8;color:#8a6406}
+.bub{background:#dcf8c6;border-radius:16px 16px 4px 16px;padding:12px 14px;font-size:13.5px;line-height:1.5;white-space:pre-line;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.sosbox{border-top:5px solid var(--crit)}.sosbtn{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.sosbtn span{background:#fde8e6;color:#b3261e;border-radius:12px;text-align:center;padding:8px 4px;font-weight:800;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:var(--cream);border:1px solid var(--line);border-radius:22px;padding:22px}.card i{font-style:normal;font-size:26px;display:block;margin-bottom:10px}.card h4{font-size:17px;margin-bottom:6px}.card p{color:var(--muted);font-size:14px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
+.step{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px}.step:before{counter-increment:s;content:counter(s);font:700 44px 'Playfair Display';color:var(--coral);line-height:1}
+.step h3{font-size:21px;margin:10px 0 6px}.step p{color:var(--muted);font-size:14.5px}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:auto}
+.vs>div{border-radius:26px;padding:28px}.vs h3{font-size:22px;margin-bottom:14px}.vs ul{list-style:none;display:grid;gap:10px;font-size:15px}
+.bad{background:#fff;border:1px solid var(--line)}.bad li:before{content:"✕  ";color:var(--crit);font-weight:900}
+.good{background:var(--ink);color:#fff}.good li:before{content:"✓  ";color:var(--gold);font-weight:900}
+.privacy{background:var(--ink);color:#fff}.privacy h2{margin-bottom:16px;font-size:clamp(30px,4vw,46px)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}.split>div>p{color:#c3d8d4}
+.checks{display:grid;gap:16px}.check{display:flex;gap:12px}.check i{font-style:normal;color:var(--gold);font-weight:900;font-size:20px}.check b{display:block}.check span{color:#c3d8d4;font-size:14px}
+.support{background:linear-gradient(135deg,#fff2e8,#fffaf0)}
+.sbox{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;border:1px solid #f0d8c9;border-radius:28px;padding:36px;background:#fff}
+.sbox h2{font-size:clamp(26px,3.4vw,38px);margin-bottom:12px}.sbox p{color:var(--muted);max-width:620px}
+.sl{display:flex;flex-direction:column;align-items:center;gap:9px;color:var(--coral);font-size:13px;font-weight:800}
+.faq{max-width:820px;margin:auto}.faq details{background:var(--cream);border:1px solid var(--line);border-radius:15px;padding:18px 20px;margin-bottom:11px}
+.faq summary{cursor:pointer;font-weight:800}.faq p{color:var(--muted);font-size:14.5px;margin-top:10px}
+.closing{background:var(--coral);color:#fff;text-align:center;padding:76px 0}.closing h2{font-size:clamp(30px,5vw,52px);margin-bottom:14px}
+.closing p{max-width:620px;margin:0 auto 26px;color:#fff3eb}.closing .button{background:var(--ink);box-shadow:none}
+.footer{background:#0a2124;color:#a8c0bc;padding:34px 0;font-size:13px}.fin{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer a{color:#fff}.footer small{display:block;margin-top:8px;color:#7f9b97;max-width:520px}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.strip .wrap{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.links{display:none}.links.open{display:flex;position:absolute;top:72px;left:0;right:0;background:rgba(251,248,241,.98);flex-direction:column;align-items:stretch;padding:14px 24px 18px;gap:4px;border-bottom:1px solid rgba(14,47,51,.1);box-shadow:0 14px 28px rgba(14,47,51,.12)}.links.open a{padding:10px 6px}.menu{display:block}
+.hero-grid,.split,.sbox,.f,.vs{grid-template-columns:1fr;gap:34px}.f.rev .txt{order:0}.f{margin-bottom:64px}.hero{padding-top:54px}.steps{grid-template-columns:1fr}.sbox{text-align:center}.sbox p{margin:auto}.phone{transform:none}}
+@media(max-width:560px){.wrap{padding:0 18px}.grid{grid-template-columns:1fr}.section{padding:60px 0}.hero h1{font-size:40px}.sbox{padding:26px 20px}.fin{display:block}.fin>div+div{margin-top:14px}.mock{padding:16px}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ReMed","url":"https://remedapp.github.io/","description":"App gratuito, privado e offline para controlar remédios, doses e estoque.","applicationCategory":"HealthApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"author":{"@type":"Person","name":"Saulomgg","url":"https://saulomgg.github.io/"}}</script>
+</head>
+<body>
+<nav class="nav"><div class="wrap nav-in"><a class="brand" href="#top"><span class="mark">Re</span><span>Re<em>Med</em></span></a>
+<div class="links"><a href="#recursos">Recursos</a><a href="#extras">E mais</a><a href="#privacidade">Privacidade</a><a href="#apoio">Apoie</a><a href="#duvidas">Dúvidas</a><a class="nav-cta" href="app/">Acessar o app ↗</a></div>
+<button class="menu" aria-label="Abrir menu" aria-expanded="false">☰</button></div></nav>
+<main id="top">
+<header class="hero"><div class="wrap hero-grid">
+<div><p class="eyebrow">Gratuito · privado · offline</p>
+<h1>Seus remédios no horário certo, <em>sem complicação.</em></h1>
+<p class="lead">Doses do dia, controle de estoque, pedido na farmácia pelo WhatsApp, alarmes na Google Agenda e ficha de emergência — tudo no seu celular, sem cadastro, sem anúncios e sem mensalidade.</p>
+<div class="actions"><a class="button" href="app/">Acessar o app grátis →</a><a class="button secondary" href="#recursos">Ver todas as funções</a></div>
+<div class="proof"><span><strong>100%</strong> gratuito</span><span><strong>Offline</strong> depois do 1º acesso</span><span><strong>Zero</strong> anúncios</span></div></div>
+<div class="phone" aria-label="Prévia do app"><div class="screen">
+<div style="display:flex;justify-content:space-between;font:800 20px Georgia,serif">ReMed <span class="ck" style="width:12px;height:12px"></span></div>
+<div class="ringc"><div class="pie"><b>2/4</b></div><div><b>Doses de hoje</b><br><small>Próxima: Metformina às 12:30</small></div></div>
+<div class="mini"><time>07:30</time><span>Omeprazol<small>20mg · 1 cápsula</small></span><i class="ck">✓</i></div>
+<div class="mini"><time>08:00</time><span>Losartana<small>50mg · 1 comprimido</small></span><i class="ck">✓</i></div>
+<div class="mini"><time>12:30</time><span>Metformina<small>850mg · após o almoço</small></span><i class="ck o"></i></div>
+<div class="mini" style="background:#fff1ea;border-color:#f4cdbd;color:#8f3f27;font-weight:600;font-size:13px">⚠️ Omeprazol acaba em 3 dias</div>
+</div></div></div></header>
 
-          var nativeFetch = win.fetch;
-          var currentFetch = nativeFetch;
+<div class="strip"><div class="wrap"><div><b>R$ 0</b><span>sem assinatura</span></div><div><b>0</b><span>anúncios</span></div><div><b>0</b><span>cadastros</span></div><div><b>100%</b><span>seus dados no seu aparelho</span></div></div></div>
 
-          function getFetch() {
-            if (currentFetch === nativeFetch && typeof nativeFetch === 'function') {
-              return nativeFetch.bind(win);
-            }
-            return currentFetch;
-          }
+<section id="recursos" class="section soft"><div class="wrap">
+<div class="head"><p class="eyebrow">Tudo o que o app faz</p><h2>Seis ferramentas para cuidar do tratamento.</h2><p>Cada função foi pensada para o dia a dia: rápida de usar, clara de ler e funcionando até sem internet.</p></div>
 
-          function setFetch(val) {
-            currentFetch = val;
-          }
+<div class="f"><div class="txt"><span class="tag">⏰ Doses do dia</span><h3>Saiba o que tomar e quando.</h3><p>A tela inicial mostra a rotina de hoje em ordem de horário, com o progresso do dia em um anel e a próxima dose em destaque.</p>
+<ul class="ul"><li>Botão “Tomar” registra a dose e desconta do estoque automaticamente</li><li>Errou o toque? “Desfazer” devolve o remédio ao estoque</li><li>Doses atrasadas ficam destacadas em vermelho</li><li>Notificação e som no horário exato de cada remédio</li><li>Vários horários por dia, dose por vez e duração do tratamento</li></ul></div>
+<div class="mock"><div class="ringc" style="margin:0"><div class="pie"><b>50%</b></div><div><b>Próxima: Metformina às 12:30</b><br><small>2 doses pendentes</small></div></div>
+<div class="m mini" style="margin:0"><time>07:30</time><span>Omeprazol<small>Tomado às 07:32</small></span><i class="ck">✓</i></div><div class="m mini" style="margin:0"><time>12:30</time><span>Metformina<small>850mg · 1 comprimido</small></span><b class="pill">Tomar</b></div><div class="m mini" style="margin:0"><time style="color:var(--crit)">08:00</time><span>Vitamina D3<small>atrasada</small></span><b class="pill w">Tomar</b></div></div></div>
 
-          // In Chromium, 'fetch' is an accessor property on Window.prototype without a setter,
-          // which causes strict-mode assignments (like browser extensions) to throw a TypeError.
-          var proto = win.Window ? win.Window.prototype : Object.getPrototypeOf(win);
-          while (proto && proto !== Object.prototype) {
-            try {
-              var desc = Object.getOwnPropertyDescriptor(proto, 'fetch');
-              if (desc) {
-                Object.defineProperty(proto, 'fetch', {
-                  get: getFetch,
-                  set: setFetch,
-                  configurable: true,
-                  enumerable: true
-                });
-              }
-            } catch (e1) {}
-            proto = Object.getPrototypeOf(proto);
-          }
+<div class="f rev"><div class="txt"><span class="tag">📦 Estoque inteligente</span><h3>Nunca fique sem o remédio.</h3><p>O ReMed calcula quantos dias de tratamento ainda restam com base nos seus horários e avisa antes de acabar.</p>
+<ul class="ul"><li>Barra colorida: verde (ok), amarelo (atenção, até 7 dias) e vermelho (crítico, até 3 dias)</li><li>Previsão da data em que o remédio termina</li><li>“Repor” soma unidades com 1 toque</li><li>Alerta mínimo configurável para cada remédio</li><li>Busca e filtros por situação do estoque</li></ul></div>
+<div class="mock"><div class="m"><b>Omeprazol</b> 20mg <span class="pill c" style="float:right">Crítico</span><div class="bar c"><i style="width:11%"></i></div><small>3 de 28 un · 3 dias · termina em breve</small></div><div class="m"><b>Losartana</b> 50mg <span class="pill w" style="float:right">Atenção</span><div class="bar w"><i style="width:30%"></i></div><small>18 de 60 un · 9 dias</small></div><div class="m"><b>Vitamina D3</b> <span class="pill" style="float:right">OK</span><div class="bar"><i style="width:93%"></i></div><small>28 de 30 un · 28 dias</small></div></div></div>
 
-          if (win.Window && win.Window.prototype) {
-            try {
-              Object.defineProperty(win.Window.prototype, 'fetch', {
-                get: getFetch,
-                set: setFetch,
-                configurable: true,
-                enumerable: true
-              });
-            } catch (e2) {}
-          }
+<div class="f"><div class="txt"><span class="tag">💬 Pedido no WhatsApp</span><h3>Peça à farmácia em segundos.</h3><p>Escolha os remédios, e o app monta a mensagem pronta. Você revisa, edita o que quiser e envia direto para a sua farmácia.</p>
+<ul class="ul"><li>Estoque baixo já vem selecionado</li><li>Quantidade de caixas por item</li><li>Seu nome e endereço de entrega entram sozinhos (opcional)</li><li>Texto totalmente editável, com botão para restaurar o modelo</li><li>Lista de farmácias favoritas, com uma padrão</li></ul></div>
+<div class="mock"><div class="m"><small>Para: Drogaria do Bairro</small></div><div class="bub">Olá! 👋 Meu nome é *Maria* e gostaria de solicitar um orçamento/pedido:
 
-          try {
-            Object.defineProperty(win, 'fetch', {
-              get: getFetch,
-              set: setFetch,
-              configurable: true,
-              enumerable: true
-            });
-          } catch (e3) {}
-        } catch (err) {}
-      })();
+1. *Omeprazol* 20mg
+   └ Quantidade: *2 caixas*
 
-      // Capture PWA install prompt early before React components mount
-      window.addEventListener('beforeinstallprompt', function(e) {
-        e.preventDefault();
-        window.__deferredPWAInstallPrompt = e;
-      });
-    </script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>ReMed PWA - Gestão Inteligente de Remédios</title>
-    <meta name="description" content="PWA moderno e fluido para gestão de medicamentos, alertas de dose com integração ao Google Agenda e pedidos rápidos via WhatsApp." />
-    <meta property="og:title" content="ReMed PWA - Gestão Inteligente de Remédios" />
-    <meta property="og:description" content="PWA moderno e fluido para gestão de medicamentos, alertas de dose com integração ao Google Agenda e pedidos rápidos via WhatsApp." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#0284c7" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="ReMed" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/assets/index-Dc3zsdRI.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CmiCnhag.css">
-  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
-  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-brand-light selection:text-brand">
-    <div id="root"></div>
-  </body>
+📍 Entrega: Rua das Flores, 142
+
+Poderiam me passar o valor? Obrigado!</div><div style="background:#25a55a;color:#fff;border-radius:999px;text-align:center;padding:11px;font-weight:800">Enviar pelo WhatsApp</div></div></div>
+
+<div class="f rev"><div class="txt"><span class="tag">📅 Google Agenda</span><h3>Alarme que toca até com o app fechado.</h3><p>Leve os horários para a agenda do celular e receba o aviso do jeito que você já está acostumado.</p>
+<ul class="ul"><li>Cada horário vira um evento diário em 1 toque</li><li>Exportação em arquivo .ics (Android, iPhone e computador)</li><li>Sincronização automática opcional, usando o seu próprio script do Google</li><li>Nada é enviado para servidores do ReMed</li></ul></div>
+<div class="mock"><div class="m"><b>💊 Tomar Losartana (50mg)</b><br><small>Todos os dias · 08:00 · lembrete 10 min antes</small></div><div class="m"><b>💊 Tomar Metformina (850mg)</b><br><small>Todos os dias · 12:30 · lembrete 10 min antes</small></div><div class="m"><b>💊 Tomar Losartana (50mg)</b><br><small>Todos os dias · 20:00 · lembrete 10 min antes</small></div></div></div>
+
+<div class="f"><div class="txt"><span class="tag">📓 Caderno de saúde</span><h3>Suas anotações médicas num só lugar.</h3><p>Guarde o que o médico falou, número de receita, exames e sintomas — ligados ao remédio certo.</p>
+<ul class="ul"><li>Categorias: consulta, receita e exame, sintomas, lembretes e outras</li><li>Fixe as mais importantes no topo</li><li>Busca por palavra-chave</li><li>Copie ou compartilhe a anotação pelo WhatsApp</li><li>100% privado, salvo apenas no aparelho</li></ul></div>
+<div class="mock"><div class="m"><span class="pill">🩺 Consulta</span> 📌<br><b>Recomendações do cardiologista</b><br><small>Aferir a pressão pela manhã. Retorno em 3 meses.</small></div><div class="m"><span class="pill w">📄 Receita</span><br><b>Receita válida até dezembro</b><br><small>Farmácia Popular retira com CPF.</small></div><div class="m"><span class="pill c">🌡️ Sintoma</span><br><b>Tontura após a caminhada</b><br><small>Avisar o médico se persistir.</small></div></div></div>
+
+<div class="f rev"><div class="txt"><span class="tag">🆘 Modo SOS</span><h3>Informação que salva, a 1 toque.</h3><p>Em uma emergência, socorristas e familiares precisam de dados rápidos. O botão SOS fica sempre visível no app.</p>
+<ul class="ul"><li>Ficha médica: tipo sanguíneo, alergias, condições e plano de saúde</li><li>Lista dos remédios em uso, gerada automaticamente</li><li>Contatos de socorro com botão de ligar e mensagem SOS no WhatsApp</li><li>Discagem direta: 192 SAMU, 193 Bombeiros, 190 Polícia e Intoxicação</li><li>Copie a ficha completa para enviar</li></ul></div>
+<div class="mock"><div class="m sosbox"><b style="font-size:16px;color:var(--crit)">🆘 Modo emergência</b><div class="sosbtn"><span>192</span><span>193</span><span>190</span></div></div><div class="m"><small>Tipo sanguíneo</small><br><b>O+</b><br><small>⚠️ Alergias</small><br><b>Penicilina, Dipirona</b></div><div class="m"><b>Maria (Esposa)</b><span class="pill" style="float:right">Ligar</span></div></div></div>
+</div></section>
+
+<section id="extras" class="section"><div class="wrap">
+<div class="head"><p class="eyebrow">E tem mais</p><h2>Detalhes que fazem diferença.</h2></div>
+<div class="grid">
+<div class="card"><i>🌙</i><h4>Tema claro e escuro</h4><p>Muda sozinho conforme o seu celular, ou escolha o que preferir.</p></div>
+<div class="card"><i>📲</i><h4>Instale como app</h4><p>Adicione à tela inicial e abra em tela cheia, sem barra de endereço.</p></div>
+<div class="card"><i>✈️</i><h4>Funciona offline</h4><p>Abre no modo avião. Só o WhatsApp e a agenda precisam de internet.</p></div>
+<div class="card"><i>💾</i><h4>Backup em JSON</h4><p>Baixe e restaure todos os seus dados quando trocar de aparelho.</p></div>
+<div class="card"><i>🔔</i><h4>Notificações e sons</h4><p>Aviso no horário certo, com sons suaves que você pode desligar.</p></div>
+<div class="card"><i>🏪</i><h4>Farmácias favoritas</h4><p>Cadastre contatos e defina a padrão para pedir com 1 toque.</p></div>
+<div class="card"><i>🧪</i><h4>Modo exemplo</h4><p>Explore com dados fictícios e limpe tudo quando quiser começar.</p></div>
+<div class="card"><i>👨‍👩‍👧</i><h4>Para a família</h4><p>Ótimo para cuidar dos remédios de pais, avós e de quem depende de você.</p></div>
+</div></div></section>
+
+<section class="section soft"><div class="wrap">
+<div class="head"><p class="eyebrow">Comparando</p><h2>Por que o ReMed existe.</h2><p>Controlar remédios deveria ser simples, gratuito e privado.</p></div>
+<div class="vs"><div class="bad"><h3>Outros aplicativos</h3><ul><li>Cheios de anúncios e pop-ups</li><li>Assinaturas mensais para liberar recursos</li><li>Presos à nuvem e a uma conta</li><li>Seus dados de saúde em servidores de terceiros</li></ul></div>
+<div class="good"><h3>ReMed</h3><ul><li>Zero anúncios, foco no seu bem-estar</li><li>Gratuito e completo, sem recursos bloqueados</li><li>Funciona offline, sem conta nenhuma</li><li>Dados só no seu aparelho</li></ul></div></div></div></section>
+
+<section class="section"><div class="wrap">
+<div class="head"><p class="eyebrow">Em um minuto</p><h2>Comece sem cadastro.</h2></div>
+<div class="steps"><div class="step"><h3>Abra o app</h3><p>Toque em “Acessar o app”. Ele já vem com exemplos para você explorar.</p></div><div class="step"><h3>Cadastre seus remédios</h3><p>Informe nome, horários e estoque. O ReMed cuida dos cálculos e avisos.</p></div><div class="step"><h3>Instale no celular</h3><p>Adicione à tela inicial e use como um app nativo, até sem internet.</p></div></div></div></section>
+
+<section id="privacidade" class="section privacy"><div class="wrap split">
+<div><p class="eyebrow">Saúde é assunto seu</p><h2>Seus dados ficam só com você.</h2><p>Não existe conta, servidor nem painel recebendo seus remédios ou anotações. Tudo é guardado no navegador do seu aparelho. Nem o desenvolvedor sabe quem usa.</p></div>
+<div class="checks"><div class="check"><i>✓</i><div><b>Sem cadastro</b><span>Abra e use. Ninguém acompanha o seu uso.</span></div></div><div class="check"><i>✓</i><div><b>Funciona offline</b><span>Depois do primeiro acesso, abre até no modo avião.</span></div></div><div class="check"><i>✓</i><div><b>Backup seu</b><span>Exporte e restaure tudo em um arquivo quando quiser.</span></div></div><div class="check"><i>✓</i><div><b>Sem anúncios nem venda de dados</b><span>Nem para anunciantes, nem para farmácias.</span></div></div></div></div></section>
+
+<section id="apoio" class="section support"><div class="wrap"><div class="sbox">
+<div><p class="eyebrow">Apoio voluntário</p><h2>Se o ReMed te ajuda, você pode apoiar.</h2><p>O projeto é gratuito e independente. Uma contribuição ajuda a manter o app, corrigir bugs e criar outras ferramentas gratuitas — sem liberar recursos pagos e sem mudar a privacidade.</p></div>
+<div class="sl"><a class="button" href="https://link.mercadopago.com.br/saulomgg" target="_blank" rel="noopener noreferrer">Link de apoio ↗</a><span>Mercado Pago · qualquer valor</span></div></div></div></section>
+
+<section id="duvidas" class="section soft"><div class="wrap">
+<div class="head"><p class="eyebrow">Sem letras miúdas</p><h2>Dúvidas comuns</h2></div>
+<div class="faq">
+<details><summary>O ReMed é realmente gratuito?</summary><p>Sim. Sem mensalidade, sem anúncios e sem recursos essenciais bloqueados.</p></details>
+<details><summary>Funciona sem internet?</summary><p>Sim, depois do primeiro acesso. Doses, estoque, caderno e ficha SOS funcionam offline. WhatsApp e Google Agenda precisam de conexão.</p></details>
+<details><summary>Os lembretes tocam com o app fechado?</summary><p>Os avisos do app funcionam enquanto ele está aberto ou em segundo plano. Para alarmes garantidos, leve os horários para a Google Agenda: o celular avisa mesmo com o app fechado.</p></details>
+<details><summary>Onde ficam meus dados?</summary><p>No armazenamento local do seu navegador. Trocar de aparelho ou limpar os dados do site apaga as informações — por isso existe o backup em JSON.</p></details>
+<details><summary>Como instalo no celular?</summary><p>No Android (Chrome): menu ⋮ › Instalar app. No iPhone (Safari): Compartilhar › Adicionar à Tela de Início. No app também há o botão “Instalar”.</p></details>
+<details><summary>Posso usar para outra pessoa?</summary><p>Sim. Muita gente usa para pais e avós. Cadastre os remédios dela e use o modo SOS com os dados e contatos corretos.</p></details>
+<details><summary>O ReMed substitui orientação médica?</summary><p>Não. É uma ferramenta de organização. Siga sempre as orientações do seu médico e do seu farmacêutico.</p></details>
+<details><summary>Como entro no aplicativo?</summary><p>Use o botão “Acessar o app”. Ele abre o aplicativo, separado deste site de apresentação.</p></details>
+</div></div></section>
+
+<section class="closing"><div class="wrap"><h2>Comece sem cadastro e sem mensalidade.</h2><p>Um app direto, gratuito e feito para deixar o seu tratamento mais organizado.</p><a class="button" href="app/">Acessar o ReMed →</a></div></section>
+</main>
+<footer class="footer"><div class="wrap fin"><div><strong>ReMed</strong><small>Gratuito · privado por padrão · não substitui orientação médica.</small></div>
+<div><a href="app/">App</a> · <a href="https://link.mercadopago.com.br/saulomgg" target="_blank" rel="noopener noreferrer">Link de apoio</a> · <a href="https://saulomgg.github.io" target="_blank" rel="noopener noreferrer">Saulomgg</a></div></div></footer>
+<script>
+if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)location.replace('app/');
+(function(){var b=document.querySelector('.menu'),l=document.querySelector('.links');
+function c(){l.classList.remove('open');b.setAttribute('aria-expanded','false');b.textContent='☰'}
+b.onclick=function(){var o=l.classList.toggle('open');b.setAttribute('aria-expanded',o);b.textContent=o?'✕':'☰'};
+l.querySelectorAll('a').forEach(function(a){a.onclick=c});addEventListener('resize',function(){if(innerWidth>800)c()})})();
+</script>
+</body>
 </html>
-

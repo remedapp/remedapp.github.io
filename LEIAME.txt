@@ -1,0 +1,5 @@
+COMO PUBLICAR (repositório remedapp.github.io)
+1. Apague os arquivos antigos do repositório (assets/, registerSW.js, workbox-*.js, manifest.webmanifest, pwa-*.png, index.html antigo...).
+2. Copie TODO o conteúdo desta pasta para a raiz do repositório (inclusive o sw.js da raiz e o .nojekyll).
+3. Commit e push. Site: remedapp.github.io  |  App: remedapp.github.io/app/
+O sw.js da raiz limpa o cache do app antigo nos aparelhos que já usavam.
