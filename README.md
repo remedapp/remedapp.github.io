@@ -1,20 +1,16 @@
-# ReMed PWA
+# ReMed
 
-PWA para organizar medicamentos, horários, doses, estoque, notificações e pedidos via WhatsApp. Os dados ficam localmente no navegador.
-
-## Rodar localmente
-
-```bash
-npm install
-npm run dev
-```
+Site e aplicativo para organizar medicamentos, estoques, farmácias e pedidos via WhatsApp.
 
 ## Publicar no GitHub Pages
 
-```bash
-npm run build
-```
+1. Crie ou abra um repositório no GitHub.
+2. Extraia o conteúdo deste ZIP e envie os arquivos para a raiz do repositório.
+3. Acesse **Settings > Pages**.
+4. Em **Build and deployment**, selecione **Deploy from a branch**.
+5. Escolha a branch `main` e a pasta `/ (root)`.
+6. Salve e aguarde o endereço do site.
 
-Publique o conteúdo de `dist/` no GitHub Pages. Não publique os arquivos-fonte diretamente: o build corrige a base `/remed-pwa/`, gera o JavaScript minificado, o manifesto e o service worker.
+A apresentação abre na raiz e o aplicativo fica em `/app/`. Os dados do aplicativo permanecem no navegador do usuário, sem cadastro e sem servidor.
 
-> O app é uma ferramenta de organização e não substitui orientação médica.
+O ReMed é uma ferramenta de organização e não substitui orientação médica, receita ou acompanhamento profissional.

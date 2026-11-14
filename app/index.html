@@ -1,305 +1,72 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ReMed — Seus remédios no horário</title>
-<meta name="description" content="Doses, estoque, pedidos no WhatsApp e ficha SOS. Offline e privado.">
-<meta name="theme-color" content="#0e2f33">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="ReMed">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#fbf8f1;--card:#fff;--ink:#0e2f33;--mut:#62736f;--line:#e3e8e2;--leaf:#1f8f86;--coral:#e9785b;--gold:#f0c977;--crit:#d9534f;--warn:#e0a21b;--soft:#eef5f1;--sh:0 6px 24px rgba(14,47,51,.07);--ib:#fff}
-[data-theme=dark]{--bg:#0a1d20;--card:#112a2e;--ink:#e8f2f0;--mut:#8fa9a5;--line:#22413f;--soft:#163438;--sh:0 6px 24px rgba(0,0,0,.3);--ib:#0d2427;color-scheme:dark}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%}body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;min-height:100%;overflow-x:hidden}
-button,input,select,textarea{font:inherit;color:inherit}a{color:inherit;text-decoration:none}
-h1,h2,h3{font-family:'Playfair Display',Georgia,serif;line-height:1.15}
-.shell{display:grid;grid-template-columns:1fr;min-height:100dvh}
-.side{display:none}
-.main{min-width:0;padding-bottom:calc(86px + env(safe-area-inset-bottom))}
-.top{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.brand{display:flex;gap:10px;align-items:center;font-weight:800;font-size:18px}.brand em{font-style:normal;color:var(--coral)}
-.mark{width:36px;height:36px;border-radius:12px;background:var(--ink);color:var(--gold);display:grid;place-items:center;font:800 16px Georgia,serif}
-[data-theme=dark] .mark{background:var(--gold);color:#0e2f33}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row.end{justify-content:flex-end;margin-top:18px}.grow{flex:1;min-width:0}
-.ic{border:1px solid var(--line);background:var(--card);border-radius:12px;height:38px;min-width:38px;padding:0 12px;font-weight:800;cursor:pointer}
-.ic.sos{background:#fde8e6;color:#b3261e;border-color:#f4c7c3}
-#view{max-width:980px;margin:auto;padding:18px 16px}
-.ph{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.ph h1{font-size:clamp(26px,5vw,36px)}.ph p{color:var(--mut);font-size:14px}
-.btn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:transform .12s;font-size:14px}
-.btn:active{transform:scale(.96)}.btn.sm{padding:7px 13px;font-size:13px}
-.btn.pri{background:var(--coral);border-color:var(--coral);color:#fff;box-shadow:0 6px 14px #e9785b30}
-.btn.ink{background:var(--ink);border-color:var(--ink);color:#fff}[data-theme=dark] .btn.ink{background:var(--gold);color:#0e2f33;border-color:var(--gold)}
-.btn.red{color:var(--crit)}.btn.wa{background:#25a55a;border-color:#25a55a;color:#fff}.btn.block{width:100%}
-.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--sh)}
-.panel{margin-bottom:16px}.panel h3{font-size:20px;margin-bottom:4px}.panel>p,.sub{color:var(--mut);font-size:13.5px;margin-bottom:12px}
-.hero2{display:flex;gap:18px;align-items:center;background:var(--ink);color:#fff;border-radius:26px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden}
-.hero2:after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:#f0c97722}
-.hero2 small{color:#b9d3cf;text-transform:capitalize}.hero2 h2{font-size:clamp(21px,4vw,28px);margin:2px 0}.hero2 p{color:#b9d3cf;font-size:14px}
-.pie{width:84px;height:84px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--gold) calc(var(--p)*1%),#ffffff26 0)}
-.pie b{width:64px;height:64px;border-radius:50%;background:var(--ink);display:grid;place-items:center;font-size:17px;color:#fff}
-.alert{display:flex;gap:12px;align-items:center;background:#fff1ea;border:1px solid #f4cdbd;color:#8f3f27;border-radius:18px;padding:12px 14px;margin-bottom:14px;font-size:14px;font-weight:600}
-[data-theme=dark] .alert{background:#3a2019;border-color:#6b3a2c;color:#f2b8a4}
-.list{display:grid;gap:10px}.dose{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px}
-.dose time{font:700 17px 'DM Sans';color:var(--leaf);min-width:54px}.dose b{display:block}.dose small{color:var(--mut)}
-.dose.done{opacity:.62}.dose.done b{text-decoration:line-through}.dose.late time{color:var(--crit)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;text-align:center}.stat b{display:block;font:700 26px 'Playfair Display'}.stat small{color:var(--mut);font-size:12px}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin:10px 0 14px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
-.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer}.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-[data-theme=dark] .chip.on{background:var(--gold);color:#0e2f33;border-color:var(--gold)}
-.tag{display:inline-block;border-radius:999px;padding:2px 10px;font-size:11.5px;font-weight:800;background:var(--soft);color:var(--leaf)}.tag.crit{background:#fde8e6;color:#b3261e}.tag.warn{background:#fdf3d8;color:#8a6406}
-.search{width:100%;margin-top:4px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.med h3{font-size:21px}.med .meta{color:var(--mut);font-size:13px;margin-bottom:10px}
-.bar{height:9px;border-radius:99px;background:var(--soft);overflow:hidden;margin:8px 0 4px}.bar i{display:block;height:100%;border-radius:99px;background:var(--leaf)}.bar.warn i{background:var(--warn)}.bar.crit i{background:var(--crit)}
-.times2{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.times2 a{border:1px solid var(--line);border-radius:10px;padding:3px 9px;font-size:12.5px;font-weight:700;background:var(--soft)}
-.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-input,select,textarea{width:100%;border:1px solid var(--line);background:var(--ib);border-radius:14px;padding:11px 13px;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--leaf);box-shadow:0 0 0 3px #1f8f8626}
-input[type=checkbox]{width:auto}textarea{resize:vertical}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.fld.w2{grid-column:1/-1}.fld>label{display:block;font-size:12.5px;font-weight:700;color:var(--mut);margin-bottom:5px}
-.chk{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px}.times{display:flex;gap:8px;flex-wrap:wrap}.times span{display:flex;gap:2px}.times input{width:auto}.times button.x{border:0;background:none;font-size:18px;cursor:pointer;color:var(--mut)}
-.modal{position:fixed;inset:0;background:rgba(7,22,24,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50}[hidden]{display:none!important}
-.sheet{background:var(--card);width:100%;max-width:660px;max-height:92dvh;overflow:auto;border-radius:26px 26px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom))}
-.sheet h3{font-size:24px}
-.sheet.sos{border-top:6px solid var(--crit)}
-.item{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}.item:first-of-type{border-top:0}
-.pick{cursor:pointer;border-radius:14px;padding:10px;border:1px solid var(--line);margin-bottom:8px;display:flex;gap:10px;align-items:center}.pick.on{border-color:var(--leaf);background:var(--soft)}
-.qty{display:flex;gap:6px;align-items:center;font-weight:800}.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer}
-.note h3{font-size:19px}.note p{white-space:pre-wrap;font-size:14px;color:var(--mut);margin:6px 0}
-.empty{text-align:center;padding:40px 16px;color:var(--mut)}.empty b{display:block;font:700 20px 'Playfair Display';color:var(--ink);margin-bottom:6px}
-.seg{display:flex;gap:6px}.seg .chip{flex:1;text-align:center}
-.demo{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--soft);border:1px dashed var(--leaf);border-radius:16px;padding:10px 14px;margin-bottom:14px;font-size:13.5px;font-weight:600}
-.bnav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
-.nv{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;color:var(--mut);padding:6px 2px;border-radius:14px;cursor:pointer}.nv span{font-size:20px}.nv.on{color:var(--ink);background:var(--soft)}
-#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:99;max-width:90vw;text-align:center}
-#toast.show{opacity:1;transform:translate(-50%,0)}#toast.ok{background:#17795f}#toast.warn{background:#a1581b}
-@media(min-width:900px){
-.shell{grid-template-columns:250px 1fr}.top,.bnav{display:none}.main{padding-bottom:30px}
-.side{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100dvh;padding:22px 16px;border-right:1px solid var(--line);background:var(--card)}
-.side .brand{margin:0 8px 18px}.side .nv{flex-direction:row;gap:12px;font-size:15px;padding:11px 14px;justify-content:flex-start;width:100%}.side .nv span{font-size:19px}
-.side .foot{margin-top:auto;display:grid;gap:8px;font-size:13px;color:var(--mut)}.side .foot a{padding:4px 8px}
-#view{padding:34px 36px}.modal{align-items:center}.sheet{border-radius:26px}#toast{bottom:28px}}
-@media(max-width:640px){.grid2{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.hero2{padding:18px}}
-@media(max-width:380px){.fg{grid-template-columns:1fr}}
-
-/* ===== acabamento visual ===== */
-body{background:radial-gradient(900px 420px at 85% -80px,#f0c97755,transparent 70%),radial-gradient(700px 400px at -10% 10%,#1f8f8626,transparent 70%),var(--bg);background-attachment:fixed}
-[data-theme=dark] body{background:radial-gradient(900px 420px at 85% -80px,#1f8f8630,transparent 70%),var(--bg)}
-.nv svg{display:block}
-.card,.panel,.stat,.dose{border:0;box-shadow:0 1px 0 var(--line),0 10px 30px rgba(14,47,51,.07)}
-[data-theme=dark] .card,[data-theme=dark] .panel,[data-theme=dark] .stat,[data-theme=dark] .dose{box-shadow:0 0 0 1px var(--line)}
-.card,.panel{border-radius:24px;padding:20px}
-.ph h1{font-size:clamp(30px,6vw,42px);letter-spacing:-.5px}
-.hero2{background:linear-gradient(135deg,#0e2f33 0%,#17615f 100%);border-radius:30px;padding:26px;box-shadow:0 18px 40px rgba(14,47,51,.25)}
-.hero2:after{width:220px;height:220px;right:-60px;top:-70px;background:radial-gradient(circle,#f0c97740,transparent 70%)}
-.hero2 h2{font-size:clamp(22px,4.4vw,30px)}.pie{width:92px;height:92px}.pie b{width:70px;height:70px;font:700 20px 'Playfair Display'}
-.btn.pri{background:linear-gradient(135deg,#ef8a6e,#e9785b)}
-.btn{padding:11px 20px}.btn.sm{padding:8px 14px}
-.list{position:relative;gap:12px}
-.dose{border-radius:20px;padding:14px 16px;border-left:5px solid var(--leaf)}.dose.late{border-left-color:var(--crit)}.dose.done{border-left-color:var(--line)}
-.dose time{background:var(--soft);border-radius:12px;padding:6px 10px;min-width:62px;text-align:center;font-size:16px}
-.dose b{font-size:16px}
-.stat{border-radius:20px;padding:16px 10px}.stat b{font-size:30px}
-.med{position:relative;overflow:hidden}.med:before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--leaf)}
-.med:has(.tag.crit):before{background:var(--crit)}.med:has(.tag.warn):before{background:var(--warn)}
-.med h3{font-size:22px}.bar{height:11px}
-.times2 a{background:var(--soft);border:0;border-radius:999px;padding:5px 12px}
-.chip{padding:8px 16px}.search{padding:14px 18px;border-radius:18px;box-shadow:0 8px 22px rgba(14,47,51,.06)}
-.pick{border-radius:18px;padding:12px 14px}
-.alert{border-radius:20px}
-.empty{padding:48px 18px}
-.top{border-bottom:0;box-shadow:0 1px 0 var(--line)}
-.bnav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));border:0;border-radius:26px;padding:7px;box-shadow:0 14px 40px rgba(14,47,51,.22);background:var(--card)}
-.nv{border-radius:20px;padding:8px 2px 6px}.nv.on{background:var(--ink);color:#fff}[data-theme=dark] .nv.on{background:var(--gold);color:#0e2f33}
-.main{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
-#toast{bottom:calc(112px + env(safe-area-inset-bottom))}
-.sheet{border-radius:30px 30px 0 0}
-@media(min-width:900px){
-.side{background:linear-gradient(180deg,#0e2f33,#12403f);border-right:0;color:#fff}
-.side .brand{color:#fff}.side .mark{background:var(--gold);color:#0e2f33}
-.side .nv{color:#b9d3cf;border-radius:16px}.side .nv:hover{background:#ffffff14}.side .nv.on{background:#ffffff1f;color:#fff;box-shadow:inset 4px 0 0 var(--coral)}
-[data-theme=dark] .side .nv.on{background:#ffffff1f;color:#fff}
-.side .foot{color:#8fb3ae}.side .foot a{color:#b9d3cf}.side .foot .btn:not([style]){background:#ffffff14;color:#fff;border-color:transparent}
-.main{padding-bottom:30px}.card,.panel{padding:22px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="ReMed — controle inteligente dos seus medicamentos. Grátis, privado e offline.">
+  <meta name="theme-color" content="#0c766b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ReMed">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <title>ReMed — seu tratamento organizado</title>
+  <link rel="stylesheet" href="./css/tokens.css">
+  <link rel="stylesheet" href="./css/components.css">
 </head>
 <body>
-<div class="shell">
-<aside class="side"><a class="brand" href="../"><span class="mark">Re</span><span>Re<em>Med</em></span></a><div id="snav" style="display:grid;gap:4px"></div>
-<div class="foot"><button class="btn block" style="background:#fde8e6;color:#b3261e;border-color:#f4c7c3" data-a="sos">🆘 Emergência / SOS</button><button class="btn block" data-a="dark">🌓 Alternar tema</button><a href="../">← Sobre o ReMed</a></div></aside>
-<div class="main"><header class="top"><a class="brand" href="../"><span class="mark">Re</span><span>Re<em>Med</em></span></a><div class="row"><button class="ic sos" data-a="sos">SOS</button><button class="ic" data-a="dark" aria-label="Tema">🌓</button></div></header><main id="view"></main></div>
-<nav class="bnav" id="bnav"></nav>
-</div>
-<div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
-<div id="toast"></div>
-<input type="file" id="imp" accept=".json" hidden>
-<script>
-const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
-const K={meds:'remed_v2_meds',logs:'remed_v2_logs',ph:'remed_v2_pharmacies',prof:'remed_v2_profile',set:'remed_v2_settings',notes:'remed_v2_notes',demo:'remed_v2_is_demo'};
-const ld=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
-const put=k=>{try{localStorage.setItem(K[k],JSON.stringify(S[k]))}catch(e){toast('Não foi possível salvar.','warn')}};
-const DS={theme:'auto',accentColor:'blue',soundEnabled:true,notificationEnabled:true,fontSize:'md',googleCalendar:{enabled:false,scriptUrl:'',autoSyncOnSave:false,status:'idle'}};
-const DP={nome:'',telefone:'',endereco:'',bairro:'',cidade:'',complemento:'',alergias:'',contatoEmergencia:'',tipoSanguineo:'',dataNascimento:'',condicoesSaude:'',planoSaude:'',observacoesMedicas:'',contatosEmergencia:[]};
-const FORMA={comprimido:'comprimido',capsula:'cápsula',gotas:'gotas',xarope:'xarope / líquido',pomada:'pomada / gel',spray:'inalador / spray',injetavel:'injetável',outro:'outro'};
-const CAT={consulta:['🩺','Consulta médica'],receita:['📄','Receita & exame'],sintoma:['🌡️','Sintomas & reações'],lembrete:['🔔','Lembrete geral'],outro:['📝','Outras notas']};
-const ico=p=>'<svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
-const T=[['hoje',ico('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),'Hoje'],['meds',ico('<path d="M10.5 20.5 3.5 13.5a4.95 4.95 0 0 1 7-7l7 7a4.95 4.95 0 0 1-7 7z"/><path d="m8.5 8.5 7 7"/>'),'Remédios'],['pedir',ico('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>'),'Pedir'],['caderno',ico('<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M8 7h8M8 11h6"/>'),'Caderno'],['mais',ico('<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="18" r="2"/>'),'Mais']];
-const PIX='saulomg2@hotmail.com';
-let S={},tab='hoje',Q={m:'',f:'all',n:'',c:'all'},P={init:0,sel:{},ph:'',nome:'',note:'',addr:true,msg:'',manual:false},IP=null;
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const p2=n=>String(n).padStart(2,'0'),today=()=>{const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())};
-const uid=p=>p+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),iso=()=>new Date().toISOString();
-const byId=id=>S.meds.find(m=>m.id===id),fmtD=d=>new Date(d).toLocaleDateString('pt-BR');
-const fone=x=>{const t=String(x||'').replace(/\D/g,'');return t?(!t.startsWith('55')&&(t.length==10||t.length==11)?'55'+t:t):''};
-const wa=(n,t)=>'https://wa.me/'+(fone(n)?fone(n):'')+'?text='+encodeURIComponent(t);
-function toast(m,t='info'){const e=$('#toast');e.textContent=m;e.className='show '+t;clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',3400)}
-function copy(t,m){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove()}).finally(()=>toast(m||'Copiado!','ok'))}
-function dl(n,t,ty){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:ty+';charset=utf-8'}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
-/* ---------- dados ---------- */
-function demo(){const n=iso(),d=n.slice(0,10),m=(i,nome,dosagem,forma,fab,h,ea,et,mi,obs,f)=>({id:'med-'+i,nome,dosagem,forma,fabricante:fab,horarios:h,dosePorVez:1,estoqueAtual:ea,estoqueTotal:et,estoqueMinimoAlerta:mi,dataInicio:d,obs,farmaciaId:f,criadoEm:n,atualizadoEm:n});
-S.meds=[m(1,'Losartana Potássica','50mg','comprimido','EMS',['08:00','20:00'],6,60,10,'Tomar com água, nos mesmos horários.','farm-1'),m(2,'Metformina','850mg','comprimido','Medley',['12:30'],14,30,8,'Durante ou logo após o almoço.','farm-1'),m(3,'Vitamina D3','7.000 UI','capsula','Eurofarma',['09:00'],28,30,5,'Uso contínuo conforme orientação médica.','farm-2'),m(4,'Omeprazol','20mg','capsula','Neo Química',['07:30'],3,28,6,'Em jejum, 30 min antes do café.','farm-2')];
-S.ph=[{id:'farm-1',nome:'Drogaria Exemplo (Centro)',whatsapp:'5511999887766',endereco:'Av. Paulista, 1200',bairro:'Bela Vista',cidade:'São Paulo',isDefault:true,notas:'Entrega rápida. Aceita Pix e cartão.'},{id:'farm-2',nome:'Farmácia Exemplo 2',whatsapp:'5511988776655',endereco:'Rua Augusta, 540',bairro:'Consolação',cidade:'São Paulo',isDefault:false,notas:'Desconto de convênio às terças.'}];
-S.prof={...DP,nome:'Usuário Exemplo',alergias:'Penicilina',tipoSanguineo:'O+',condicoesSaude:'Hipertensão',endereco:'Rua das Palmeiras, 380',bairro:'Jardins',cidade:'São Paulo',contatosEmergencia:[{id:'em-1',nome:'Maria',parentesco:'Familiar',telefone:'11991234567',whatsapp:'5511991234567',isPrincipal:true}]};
-S.notes=[{id:'note-1',titulo:'Recomendações da consulta',conteudo:'Aferir a pressão pela manhã, em repouso. Retorno em 3 meses.',categoria:'consulta',medicationIds:['med-1'],criadoEm:n,atualizadoEm:n,fixado:true}];
-S.logs=[];S.demo=true;['meds','ph','prof','notes','logs'].forEach(put);localStorage.setItem(K.demo,'true')}
-function load(){if(localStorage.getItem(K.meds)===null)demo();
-S.meds=ld(K.meds,[]);S.logs=ld(K.logs,[]);S.ph=ld(K.ph,[]);S.notes=ld(K.notes,[]);S.prof={...DP,...ld(K.prof,{})};
-const s=ld(K.set,{});S.set={...DS,...s,googleCalendar:{...DS.googleCalendar,...(s.googleCalendar||{})}};S.demo=localStorage.getItem(K.demo)==='true'}
-function st(m){const t=Math.max(0,m.estoqueAtual||0),n=Math.max(1,m.estoqueTotal||t),p=Math.min(100,t/n*100),per=(m.horarios?.length||1)*(m.dosePorVez||1),d=Math.floor(t/per);let s='ok';if(t<=(m.estoqueMinimoAlerta||5)||p<=18||d<=3)s='crit';else if(p<=35||d<=7)s='warn';const e=new Date();e.setDate(e.getDate()+d);return{t,p,d,s,end:e.toLocaleDateString('pt-BR')}}
-const taken=(id,h,d=today())=>S.logs.some(l=>l.medicationId===id&&l.horario===h&&l.data===d);
-/* ---------- som / tema / notificações ---------- */
-let AC;function chime(f){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume();f.forEach((x,i)=>{const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*.14;o.frequency.value=x;g.gain.setValueAtTime(.13,t);g.gain.exponentialRampToValueAtTime(.001,t+.4);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.4)})}catch(e){}}
-function theme(){const t=S.set.theme,d=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';$('meta[name=theme-color]').content=d?'#0a1d20':'#0e2f33'}
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
-const notified=new Set();
-async function notify(t,o){if(!('Notification'in window)||Notification.permission!=='granted')return;try{const r=await navigator.serviceWorker.ready;await r.showNotification(t,{icon:'icon-192.png',...o})}catch(e){try{new Notification(t,o)}catch(x){}}}
-function due(){if(!S.set.notificationEnabled)return;const n=new Date(),hm=p2(n.getHours())+':'+p2(n.getMinutes());S.meds.forEach(m=>(m.horarios||[]).forEach(h=>{const k=m.id+h+today();if(h!==hm||notified.has(k)||taken(m.id,h))return;notified.add(k);notify('💊 Hora do remédio: '+m.nome,{body:'Tome '+m.nome+(m.dosagem?' ('+m.dosagem+')':'')+' — '+h,tag:k});if(S.set.soundEnabled)chime([660,660,880]);toast('⏰ Hora de tomar '+m.nome+' ('+h+')','warn')}))}
-/* ---------- agenda ---------- */
-const gcal=(m,h)=>{const[a,b]=h.split(':').map(Number),s=new Date();s.setHours(a,b,0,0);const f=d=>d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('💊 Tomar '+m.nome+' ('+(m.dosagem||'')+')')+'&details='+encodeURIComponent('ReMed — '+(m.obs||''))+'&dates='+f(s)+'/'+f(new Date(s.getTime()+9e5))+'&recur=RRULE%3AFREQ%3DDAILY'};
-function ics(){const n=new Date(),D=n.getFullYear()+p2(n.getMonth()+1)+p2(n.getDate()),L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ReMed//PT','CALSCALE:GREGORIAN','X-WR-CALNAME:💊 Medicamentos (ReMed)'];
-S.meds.forEach(m=>(m.horarios||[]).forEach((h,i)=>{const[a,b]=h.split(':').map(Number),e=new Date(2000,0,1,a,b+15);L.push('BEGIN:VEVENT','UID:remed-'+m.id+'-'+i+'@remed','DTSTAMP:'+D+'T120000Z','DTSTART:'+D+'T'+p2(a)+p2(b)+'00','DTEND:'+D+'T'+p2(e.getHours())+p2(e.getMinutes())+'00','RRULE:FREQ=DAILY','SUMMARY:💊 Tomar '+m.nome+' ('+(m.dosagem||'')+')','BEGIN:VALARM','TRIGGER:-PT10M','ACTION:DISPLAY','DESCRIPTION:Hora de tomar '+m.nome,'END:VALARM','END:VEVENT')}));
-L.push('END:VCALENDAR');dl('remed-medicamentos.ics',L.join('\r\n'),'text/calendar')}
-async function hook(a){const u=(S.set.googleCalendar.scriptUrl||'').trim();if(!u.startsWith('http'))return a?toast('Cole a URL do Google Apps Script em Mais › Google Agenda.','warn'):0;
-try{const r=await fetch(u,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(a==='test'?{action:'test'}:{action:'sync',timestamp:iso(),medications:S.meds.map(m=>({id:m.id,nome:m.nome,dosagem:m.dosagem,forma:m.forma,horarios:m.horarios,dosePorVez:m.dosePorVez,estoqueAtual:m.estoqueAtual,duracaoDias:m.duracaoDias,obs:m.obs}))})});let j={};try{j=await r.json()}catch(e){}toast(j.message||(r.ok?'Enviado para a Google Agenda!':'Erro HTTP '+r.status),r.ok&&j.success!==false?'ok':'warn')}catch(e){toast('Comando enviado. Confira sua Google Agenda em instantes.','ok')}}
-/* ---------- pedido ---------- */
-function initP(){if(P.init)return;P.init=1;S.meds.filter(m=>st(m).s!=='ok').forEach(m=>P.sel[m.id]=1);const d=S.ph.find(p=>p.isDefault)||S.ph[0];P.ph=d?d.id:'';P.nome=S.prof.nome||''}
-function buildMsg(){const pf=S.prof,n=P.nome.trim(),it=S.meds.filter(m=>P.sel[m.id]).map((m,i)=>(i+1)+'. *'+m.nome+'*'+(m.dosagem?' '+m.dosagem:'')+(m.fabricante?' ('+m.fabricante+')':'')+'\n   └ Quantidade: *'+P.sel[m.id]+' '+(P.sel[m.id]==1?'caixa':'caixas')+'*').join('\n\n')||'(Nenhum item selecionado)';
-let s='Olá! 👋 '+(n?'Meu nome é *'+n+'* e gostaria':'Gostaria')+' de solicitar um orçamento/pedido dos seguintes medicamentos:\n\n'+it;
-if(P.note.trim())s+='\n\n📝 *Observação:* '+P.note.trim();
-if(P.addr&&(pf.endereco||'').trim()){s+='\n\n📍 *Endereço para Entrega:*\n'+pf.endereco.trim()+(pf.bairro?' - '+pf.bairro.trim():'')+(pf.cidade?' - '+pf.cidade.trim():'')+(pf.complemento?' ('+pf.complemento.trim()+')':'')}
-return s+'\n\nVocês têm disponível para pronta entrega ou envio? Poderiam me passar o valor? Obrigado!'}
-const curMsg=()=>P.manual?P.msg:buildMsg();
-/* ---------- modal / formulário ---------- */
-function modal(h,c=''){$('#sheet').className='sheet '+c;$('#sheet').innerHTML=h;$('#modal').hidden=false;document.body.style.overflow='hidden'}
-function closeM(){$('#modal').hidden=true;document.body.style.overflow=''}
-$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeM()});
-function form(title,F,v,ok,sub=''){const h=F.map(f=>{const x=v[f.k]??'';let i;
-if(f.t==='sel')i='<select name="'+f.k+'">'+f.o.map(o=>'<option value="'+esc(o[0])+'"'+(o[0]==x?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>';
-else if(f.t==='area')i='<textarea name="'+f.k+'" rows="4" placeholder="'+esc(f.p||'')+'"'+(f.r?' required':'')+'>'+esc(x)+'</textarea>';
-else if(f.t==='chk')i='<label class="chk"><input type="checkbox" name="'+f.k+'"'+(x?' checked':'')+'> '+f.l+'</label>';
-else if(f.t==='times')i='<div class="times" id="tm">'+(x||[]).map(t=>'<span><input type="time" value="'+t+'"><button type="button" class="x" data-a="rmt">×</button></span>').join('')+'<button type="button" class="btn sm" data-a="addt">+ horário</button></div>';
-else i='<input name="'+f.k+'" type="'+(f.t||'text')+'" value="'+esc(x)+'" placeholder="'+esc(f.p||'')+'"'+(f.r?' required':'')+(f.t==='number'?' min="0" step="any" inputmode="decimal"':'')+'>';
-return '<div class="fld'+(f.w?' w2':'')+'">'+(f.t==='chk'?'':'<label>'+f.l+'</label>')+i+'</div>'}).join('');
-modal('<form id="frm"><h3>'+title+'</h3>'+(sub?'<p class="sub">'+sub+'</p>':'')+'<div class="fg">'+h+'</div><div class="row end"><button type="button" class="btn" data-a="close">Cancelar</button><button class="btn pri">Salvar</button></div></form>');
-$('#frm').onsubmit=e=>{e.preventDefault();const o={},el=$('#frm').elements;F.forEach(f=>{if(f.t==='times')o[f.k]=$$('#tm input').map(i=>i.value).filter(Boolean).sort();else if(f.t==='chk')o[f.k]=el[f.k].checked;else if(f.t==='number')o[f.k]=el[f.k].value===''?'':+el[f.k].value;else o[f.k]=el[f.k].value.trim()});ok(o);closeM()}}
-/* ---------- telas ---------- */
-const head=(t,s,a='')=>'<div class="ph"><div><h1>'+t+'</h1><p>'+s+'</p></div><div class="row">'+a+'</div></div>';
-const empty=(t,s,b='')=>'<div class="card empty"><b>'+t+'</b>'+s+(b?'<div style="margin-top:14px">'+b+'</div>':'')+'</div>';
-const V={
-hoje(){const n=new Date(),hm=p2(n.getHours())+':'+p2(n.getMinutes()),ds=[];S.meds.forEach(m=>(m.horarios||[]).forEach(h=>ds.push({m,h,t:taken(m.id,h)})));ds.sort((a,b)=>a.h.localeCompare(b.h)||a.m.nome.localeCompare(b.m.nome));
-const dn=ds.filter(d=>d.t).length,pc=ds.length?Math.round(dn/ds.length*100):0,nx=ds.find(d=>!d.t),low=S.meds.filter(m=>st(m).s!=='ok');
-return head('Olá'+(S.prof.nome?', '+esc(S.prof.nome.split(' ')[0]):''),'Seu resumo de hoje','<button class="btn pri" data-a="medForm">+ Novo remédio</button>')+
-'<section class="hero2"><div class="pie" style="--p:'+pc+'"><b>'+dn+'/'+ds.length+'</b></div><div><small>'+n.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})+'</small><h2>'+(!ds.length?'Nenhuma dose hoje':dn===ds.length?'Tudo em dia! 🎉':'Próxima: '+esc(nx.m.nome)+' às '+nx.h)+'</h2><p>'+(ds.length?(ds.length-dn)+' dose(s) pendente(s) · '+pc+'% concluído':'Cadastre remédios com horários.')+'</p></div></section>'+
-(low.length?'<div class="alert"><span style="font-size:22px">⚠️</span><div class="grow">'+low.length+' remédio(s) com estoque baixo: '+low.slice(0,3).map(m=>esc(m.nome)).join(', ')+'</div><button class="btn sm pri" data-a="tab" data-t="pedir">Pedir</button></div>':'')+
-'<div class="list">'+(ds.map(d=>'<div class="dose'+(d.t?' done':d.h<hm?' late':'')+'"><time>'+d.h+'</time><div class="grow"><b>'+esc(d.m.nome)+'</b><small>'+esc(d.m.dosagem)+' · '+(d.m.dosePorVez||1)+' '+(FORMA[d.m.forma]||'')+(!d.t&&d.h<hm?' · atrasada':'')+'</small></div><button class="btn sm'+(d.t?'':' pri')+'" data-a="'+(d.t?'undo':'take')+'" data-id="'+d.m.id+'" data-h="'+d.h+'">'+(d.t?'✓ Tomado':'Tomar')+'</button></div>').join('')||empty('Nenhum horário programado','Cadastre remédios com horários para ver sua rotina aqui.','<button class="btn pri" data-a="medForm">+ Adicionar remédio</button>'))+'</div>'},
-meds(){const c={crit:0,warn:0};S.meds.forEach(m=>{const s=st(m).s;if(c[s]!==undefined)c[s]++});const pend=S.meds.reduce((a,m)=>a+(m.horarios||[]).filter(h=>!taken(m.id,h)).length,0);
-return head('Remédios','Seu estoque e horários','<button class="btn pri" data-a="medForm">+ Novo</button>')+
-'<div class="stats"><div class="stat"><b>'+S.meds.length+'</b><small>cadastrados</small></div><div class="stat"><b style="color:var(--crit)">'+c.crit+'</b><small>crítico (≤3 dias)</small></div><div class="stat"><b style="color:var(--warn)">'+c.warn+'</b><small>atenção (≤7 dias)</small></div><div class="stat"><b>'+pend+'</b><small>doses pendentes</small></div></div>'+
-'<input class="search" data-i="q" placeholder="Buscar por remédio, dosagem ou fabricante…" value="'+esc(Q.m)+'"><div class="chips">'+[['all','Todos'],['crit','Crítico'],['warn','Atenção'],['ok','Estoque OK']].map(f=>'<button class="chip'+(Q.f===f[0]?' on':'')+'" data-a="mf" data-f="'+f[0]+'">'+f[1]+'</button>').join('')+'</div><div id="ml">'+medList()+'</div>'},
-pedir(){initP();if(!S.meds.length)return head('Pedir no WhatsApp','Monte o pedido para a farmácia')+empty('Cadastre um remédio primeiro','Depois é só selecionar os itens do pedido.');
-const q=Object.keys(P.sel).length;
-return head('Pedir no WhatsApp','Selecione os itens, edite a mensagem e envie à farmácia','<button class="btn" data-a="lowAdd">+ Estoque baixo</button>')+
-'<div class="grid2"><div><div class="panel"><div class="fg" style="margin:0"><div class="fld w2"><label>Farmácia</label>'+(S.ph.length?'<select data-i="pph">'+S.ph.map(p=>'<option value="'+p.id+'"'+(p.id===P.ph?' selected':'')+'>'+esc(p.nome)+'</option>').join('')+'</select>':'<button class="btn block" data-a="phForm">+ Cadastrar farmácia</button>')+'</div><div class="fld w2"><label>Seu nome no pedido</label><input data-i="pnome" value="'+esc(P.nome)+'" placeholder="Seu nome"></div></div></div>'+
-'<div class="panel"><h3>Itens ('+q+')</h3><p class="sub">Toque para marcar. Use + e − para a quantidade de caixas.</p>'+S.meds.map(m=>{const s=st(m),n=P.sel[m.id];return '<div class="pick'+(n?' on':'')+'" data-a="psel" data-id="'+m.id+'"><div class="grow"><b>'+esc(m.nome)+'</b> <small>'+esc(m.dosagem)+'</small><br><span class="tag '+s.s+'">'+s.t+' un · '+s.d+'d</span></div>'+(n?'<div class="qty"><button data-a="pq" data-id="'+m.id+'" data-d="-1">−</button>'+n+'<button data-a="pq" data-id="'+m.id+'" data-d="1">+</button></div>':'')+'</div>'}).join('')+'</div></div>'+
-'<div class="panel"><h3>Mensagem</h3><div class="fld" style="margin:8px 0"><input data-i="pnote" value="'+esc(P.note)+'" placeholder="Pergunta rápida (ex.: pode ser genérico?)"></div><label class="chk" style="margin-bottom:8px"><input type="checkbox" data-i="paddr"'+(P.addr?' checked':'')+'> Incluir meu endereço de entrega</label><textarea id="pmsg" data-i="pmsg" rows="13">'+esc(curMsg())+'</textarea>'+(P.manual?'<p class="sub" style="margin-top:6px">Editada manualmente · <a href="#" data-a="prst" style="color:var(--leaf);font-weight:700">restaurar</a></p>':'')+'<div class="row" style="margin-top:12px"><button class="btn wa grow" data-a="psend">Enviar pelo WhatsApp</button><button class="btn" data-a="pcopy">Copiar</button></div></div></div>'},
-caderno(){const l=S.notes.filter(n=>(Q.c==='all'||n.categoria===Q.c)&&(n.titulo+' '+n.conteudo).toLowerCase().includes(Q.n.toLowerCase())).sort((a,b)=>(b.fixado?1:0)-(a.fixado?1:0));
-return head('Caderno','Consultas, receitas e sintomas — só no seu aparelho','<button class="btn pri" data-a="noteForm">+ Anotação</button>')+'<input class="search" data-i="nq" placeholder="Buscar anotações…" value="'+esc(Q.n)+'"><div class="chips"><button class="chip'+(Q.c==='all'?' on':'')+'" data-a="nc" data-c="all">Todas</button>'+Object.entries(CAT).map(([k,v])=>'<button class="chip'+(Q.c===k?' on':'')+'" data-a="nc" data-c="'+k+'">'+v[0]+' '+v[1]+'</button>').join('')+'</div><div id="nl" class="grid2">'+(l.map(n=>{const c=CAT[n.categoria]||CAT.outro,ms=(n.medicationIds||[]).map(i=>byId(i)?.nome).filter(Boolean);return '<article class="card note"><div class="row"><span class="tag">'+c[0]+' '+c[1]+'</span>'+(n.fixado?'<span>📌</span>':'')+'</div><h3 style="margin-top:8px">'+esc(n.titulo)+'</h3><p>'+esc(n.conteudo)+'</p><small class="sub">'+(ms.length?'💊 '+esc(ms.join(', '))+' · ':'')+fmtD(n.atualizadoEm||n.criadoEm)+'</small><div class="acts"><button class="btn sm" data-a="npin" data-id="'+n.id+'">'+(n.fixado?'Desafixar':'Fixar')+'</button><button class="btn sm" data-a="ncopy" data-id="'+n.id+'">Copiar</button><button class="btn sm" data-a="nwa" data-id="'+n.id+'">WhatsApp</button><button class="btn sm" data-a="noteForm" data-id="'+n.id+'">Editar</button><button class="btn sm red" data-a="ndel" data-id="'+n.id+'">Excluir</button></div></article>'}).join('')||'<div style="grid-column:1/-1">'+empty('Nenhuma anotação','Guarde orientações médicas e lembretes.','<button class="btn pri" data-a="noteForm">Criar anotação</button>')+'</div>')+'</div>'},
-mais(){const s=S.set,g=s.googleCalendar,inst=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
-return head('Mais','Farmácias, perfil, ajustes e backup')+'<div class="grid2"><div>'+
-'<div class="panel"><div class="row" style="justify-content:space-between"><h3>Farmácias</h3><button class="btn sm pri" data-a="phForm">+ Nova</button></div><p class="sub">Contatos de WhatsApp para pedir com 1 toque.</p>'+(S.ph.map(p=>'<div class="item"><div class="grow"><b>'+esc(p.nome)+'</b> '+(p.isDefault?'<span class="tag">Padrão</span>':'')+'<br><small class="sub">'+esc([p.endereco,p.bairro,p.cidade].filter(Boolean).join(', '))+'</small></div><div class="row"><a class="btn sm wa" target="_blank" rel="noopener" href="'+wa(p.whatsapp,'Olá!')+'">💬</a>'+(p.isDefault?'':'<button class="btn sm" data-a="phdef" data-id="'+p.id+'">Padrão</button>')+'<button class="btn sm" data-a="phForm" data-id="'+p.id+'">✎</button><button class="btn sm red" data-a="phdel" data-id="'+p.id+'">✕</button></div></div>').join('')||'<small class="sub">Nenhuma farmácia cadastrada.</small>')+'</div>'+
-'<div class="panel"><h3>Perfil & ficha SOS</h3><p class="sub">Usados no pedido e no modo de emergência.</p><div class="row"><button class="btn" data-a="profForm">Editar perfil e ficha médica</button><button class="btn" data-a="sos">Abrir SOS</button></div></div>'+
-'<div class="panel"><h3>Apoie o ReMed ❤️</h3><p class="sub">Gratuito, sem anúncios. Se ajudou, contribua com qualquer valor.</p><div class="row"><a class="btn pri" target="_blank" rel="noopener" href="https://link.mercadopago.com.br/saulomgg">Mercado Pago ↗</a><button class="btn" data-a="pix">Copiar chave PIX</button></div><small class="sub" style="display:block;margin-top:8px">PIX (e-mail): '+PIX+'</small></div></div><div>'+
-'<div class="panel"><h3>Aparência e alertas</h3><div class="seg" style="margin:10px 0">'+[['light','☀️ Claro'],['dark','🌙 Escuro'],['auto','Auto']].map(t=>'<button class="chip'+(s.theme===t[0]?' on':'')+'" data-a="th" data-v="'+t[0]+'">'+t[1]+'</button>').join('')+'</div><label class="chk" style="margin:8px 0"><input type="checkbox" data-i="snd"'+(s.soundEnabled?' checked':'')+'> Som ao marcar e nos lembretes</label><label class="chk"><input type="checkbox" data-i="ntf"'+(s.notificationEnabled?' checked':'')+'> Notificações no horário ('+('Notification'in window?Notification.permission==='granted'?'permitidas':Notification.permission==='denied'?'bloqueadas no navegador':'pendentes'):'sem suporte')+')</label><div class="row" style="margin-top:10px"><button class="btn sm" data-a="ntest">Testar notificação</button></div></div>'+
-'<div class="panel"><h3>Google Agenda</h3><p class="sub">Alarmes que tocam mesmo com o app fechado.</p><div class="row"><button class="btn" data-a="ics">Exportar .ics</button><a class="btn" target="_blank" rel="noopener" href="google-agenda.gs.txt">Ver script</a></div><div class="fld" style="margin-top:12px"><label>URL do Apps Script (opcional)</label><input data-i="gurl" value="'+esc(g.scriptUrl)+'" placeholder="https://script.google.com/macros/s/…/exec"></div><div class="row" style="margin-top:10px"><button class="btn sm" data-a="gtest">Testar</button><button class="btn sm ink" data-a="gsync">Sincronizar agora</button></div><label class="chk" style="margin-top:10px"><input type="checkbox" data-i="gauto"'+(g.autoSyncOnSave?' checked':'')+'> Sincronizar ao salvar remédio</label></div>'+
-'<div class="panel"><h3>Dados e backup</h3><p class="sub">Tudo fica neste aparelho. Faça backups.</p><div class="row"><button class="btn" data-a="exp">Baixar backup</button><button class="btn" data-a="imp">Restaurar backup</button></div><div class="row" style="margin-top:10px"><button class="btn sm" data-a="demoOn">Carregar exemplos</button><button class="btn sm red" data-a="wipe">Zerar tudo</button></div></div>'+
-'<div class="panel"><h3>Instalar no celular</h3><p class="sub">'+(inst?'ReMed já está instalado ✓':'Use como app, em tela cheia e offline.')+'</p>'+(inst?'':'<button class="btn ink" data-a="install">Instalar app</button>')+'<p class="sub" style="margin-top:10px">ReMed organiza seus remédios e não substitui orientação médica. Feito por <a href="https://saulomgg.github.io" target="_blank" rel="noopener" style="font-weight:700">Saulomgg</a>.</p></div></div></div>'}};
-function medList(){const q=Q.m.toLowerCase(),l=S.meds.filter(m=>(Q.f==='all'||st(m).s===Q.f)&&(m.nome+' '+m.dosagem+' '+(m.fabricante||'')).toLowerCase().includes(q));
-return '<div class="grid2">'+(l.map(m=>{const s=st(m);return '<article class="card med"><div class="row" style="justify-content:space-between;align-items:flex-start"><h3>'+esc(m.nome)+'</h3><span class="tag '+s.s+'">'+(s.s==='crit'?'Crítico':s.s==='warn'?'Atenção':'OK')+'</span></div><div class="meta">'+esc(m.dosagem)+' · '+(FORMA[m.forma]||'')+(m.fabricante?' · '+esc(m.fabricante):'')+' · '+(m.dosePorVez||1)+' por vez</div><div class="bar '+s.s+'"><i style="width:'+Math.max(3,s.p)+'%"></i></div><small class="sub"><b>'+s.t+'</b> de '+m.estoqueTotal+' un · '+s.d+' dia(s) · termina ~'+s.end+'</small><div class="times2">'+(m.horarios||[]).map(h=>'<a target="_blank" rel="noopener" href="'+gcal(m,h)+'" title="Adicionar à Google Agenda">⏰ '+h+'</a>').join('')+'</div>'+(m.obs?'<small class="sub">'+esc(m.obs)+'</small>':'')+'<div class="acts"><button class="btn sm ink" data-a="restock" data-id="'+m.id+'">Repor</button><button class="btn sm wa" data-a="ordMed" data-id="'+m.id+'">Pedir</button><button class="btn sm" data-a="medForm" data-id="'+m.id+'">Editar</button><button class="btn sm red" data-a="medDel" data-id="'+m.id+'">Excluir</button></div></article>'}).join('')||'<div style="grid-column:1/-1">'+empty('Nenhum medicamento encontrado','Cadastre ou ajuste os filtros.','<button class="btn pri" data-a="medForm">+ Adicionar remédio</button>')+'</div>')+'</div>'}
-function render(){$('#view').innerHTML=(S.demo&&tab!=='mais'?'<div class="demo"><span>👀 Você está vendo dados de exemplo.</span><button class="btn sm" data-a="demoOff">Limpar e começar</button></div>':'')+V[tab]();$$('.nv').forEach(b=>b.classList.toggle('on',b.dataset.t===tab))}
-/* ---------- SOS ---------- */
-function sos(){const p=S.prof,c=p.contatosEmergencia||[],rows=[['Tipo sanguíneo',p.tipoSanguineo],['⚠️ Alergias',p.alergias],['Condições',p.condicoesSaude],['Plano / SUS',p.planoSaude],['Observações',p.observacoesMedicas],['Endereço',[p.endereco,p.bairro,p.cidade].filter(Boolean).join(', ')]];
-const ficha='FICHA MÉDICA — '+(p.nome||'')+'\n'+rows.filter(r=>r[1]).map(r=>r[0]+': '+r[1]).join('\n')+'\nEm uso: '+(S.meds.map(m=>m.nome+' '+m.dosagem).join('; ')||'—');sos.t=ficha;
-modal('<div class="row" style="justify-content:space-between"><h3 style="color:var(--crit)">🆘 Modo emergência</h3><button class="btn sm" data-a="close">Fechar</button></div><p class="sub">Informações críticas para socorristas e contatos de apoio.</p><div class="grid2" style="margin-bottom:12px"><a class="btn pri block" href="tel:192">🚑 192 SAMU</a><a class="btn block" href="tel:193">🚒 193 Bombeiros</a><a class="btn block" href="tel:190">🚓 190 Polícia</a><a class="btn block" href="tel:08007226001">☠️ Intoxicação 0800 722 6001</a></div>'+
-'<div class="panel" style="box-shadow:none"><div class="row" style="justify-content:space-between"><h3>'+esc(p.nome||'Paciente sem nome')+'</h3><button class="btn sm" data-a="profForm">Editar</button></div>'+(rows.filter(r=>r[1]).map(r=>'<div class="item"><small class="sub" style="min-width:110px;margin:0">'+r[0]+'</small><b>'+esc(r[1])+'</b></div>').join('')||'<small class="sub">Ficha vazia. Toque em editar.</small>')+'<div class="item"><small class="sub" style="min-width:110px;margin:0">💊 Em uso</small><b>'+(esc(S.meds.map(m=>m.nome+' '+m.dosagem).join('; '))||'—')+'</b></div><button class="btn block" style="margin-top:8px" data-a="sosCopy">Copiar ficha completa</button></div>'+
-'<div class="panel" style="box-shadow:none"><div class="row" style="justify-content:space-between"><h3>Contatos de socorro</h3><button class="btn sm" data-a="ctForm">+ Contato</button></div>'+(c.map(x=>'<div class="item"><div class="grow"><b>'+esc(x.nome)+'</b> '+(x.isPrincipal?'<span class="tag">Principal</span>':'')+'<br><small class="sub">'+esc(x.parentesco)+'</small></div><a class="btn sm pri" href="tel:'+esc(x.telefone)+'">Ligar</a><a class="btn sm wa" target="_blank" rel="noopener" href="'+wa(x.whatsapp||x.telefone,'🆘 SOCORRO! Preciso de ajuda urgente. Sou '+(p.nome||'seu contato')+'.')+'">SOS</a><button class="btn sm red" data-a="ctDel" data-id="'+x.id+'">✕</button></div>').join('')||'<small class="sub">Adicione familiares ou médicos para ligar com 1 toque.</small>')+'</div>','sos')}
-/* ---------- formulários ---------- */
-function medForm(id){const m=id?byId(id):{nome:'',dosagem:'',forma:'comprimido',fabricante:'',horarios:['08:00'],dosePorVez:1,estoqueAtual:30,estoqueTotal:30,estoqueMinimoAlerta:6,dataInicio:today(),duracaoDias:'',farmaciaId:'',obs:''};
-form(id?'Editar remédio':'Novo remédio',[{k:'nome',l:'Nome do remédio',r:1,w:1,p:'Ex.: Losartana Potássica'},{k:'dosagem',l:'Dosagem',p:'50mg, 10ml…'},{k:'forma',l:'Apresentação',t:'sel',o:Object.entries(FORMA)},{k:'fabricante',l:'Fabricante (opcional)',w:1},{k:'horarios',l:'Horários',t:'times',w:1},{k:'dosePorVez',l:'Dose por vez',t:'number'},{k:'estoqueAtual',l:'Estoque atual',t:'number'},{k:'estoqueTotal',l:'Total da caixa',t:'number'},{k:'estoqueMinimoAlerta',l:'Alerta mínimo',t:'number'},{k:'dataInicio',l:'Data de início',t:'date'},{k:'duracaoDias',l:'Duração (dias)',t:'number',p:'Vazio = contínuo'},{k:'farmaciaId',l:'Farmácia preferida',t:'sel',o:[['','Nenhuma'],...S.ph.map(p=>[p.id,p.nome])],w:1},{k:'obs',l:'Observações',t:'area',w:1,p:'Ex.: tomar em jejum'}],m,o=>{const n={...m,...o,id:m.id||uid('med'),horarios:o.horarios.length?o.horarios:['08:00'],dosePorVez:o.dosePorVez||1,estoqueAtual:o.estoqueAtual||0,estoqueTotal:o.estoqueTotal||o.estoqueAtual||1,estoqueMinimoAlerta:o.estoqueMinimoAlerta||5,atualizadoEm:iso(),criadoEm:m.criadoEm||iso()};if(o.duracaoDias==='')delete n.duracaoDias;const i=S.meds.findIndex(x=>x.id===n.id);i>=0?S.meds[i]=n:S.meds.push(n);put('meds');render();toast('Remédio salvo!','ok');if(S.set.googleCalendar.autoSyncOnSave)hook()})}
-function phForm(id){const p=id?S.ph.find(x=>x.id===id):{nome:'',whatsapp:'',endereco:'',bairro:'',cidade:'',notas:'',isDefault:!S.ph.length};
-form(id?'Editar farmácia':'Nova farmácia',[{k:'nome',l:'Nome',r:1,w:1,p:'Ex.: Drogaria do Bairro'},{k:'whatsapp',l:'WhatsApp',t:'tel',w:1,p:'11 99999-8888'},{k:'endereco',l:'Endereço',w:1},{k:'bairro',l:'Bairro'},{k:'cidade',l:'Cidade'},{k:'notas',l:'Notas',w:1,p:'Atende 24h, entrega grátis…'},{k:'isDefault',l:'Farmácia padrão nos pedidos',t:'chk',w:1}],p,o=>{const n={...p,...o,id:p.id||uid('farm'),whatsapp:o.whatsapp.replace(/\D/g,'')};if(n.isDefault)S.ph.forEach(x=>x.isDefault=false);const i=S.ph.findIndex(x=>x.id===n.id);i>=0?S.ph[i]=n:S.ph.push(n);if(!S.ph.some(x=>x.isDefault))S.ph[0].isDefault=true;put('ph');if(!P.ph)P.ph=n.id;render();toast('Farmácia salva!','ok')})}
-function noteForm(id){const n=id?S.notes.find(x=>x.id===id):{categoria:'consulta',titulo:'',conteudo:'',fixado:false,medicationIds:[]};
-form(id?'Editar anotação':'Nova anotação',[{k:'categoria',l:'Tipo',t:'sel',o:Object.entries(CAT).map(([k,v])=>[k,v[0]+' '+v[1]]),w:1},{k:'titulo',l:'Título',r:1,w:1},{k:'med',l:'Ligada ao remédio',t:'sel',o:[['','Nenhum'],...S.meds.map(m=>[m.id,m.nome])],w:1},{k:'conteudo',l:'Conteúdo',t:'area',r:1,w:1},{k:'fixado',l:'Fixar no topo',t:'chk',w:1}],{...n,med:(n.medicationIds||[])[0]||''},o=>{const x={...n,categoria:o.categoria,titulo:o.titulo,conteudo:o.conteudo,fixado:o.fixado,medicationIds:o.med?[o.med]:[],id:n.id||uid('note'),atualizadoEm:iso(),criadoEm:n.criadoEm||iso()},i=S.notes.findIndex(y=>y.id===x.id);i>=0?S.notes[i]=x:S.notes.unshift(x);put('notes');render();toast('Anotação salva!','ok')})}
-function profForm(){form('Perfil e ficha médica',[{k:'nome',l:'Nome completo',w:1},{k:'telefone',l:'WhatsApp',t:'tel'},{k:'dataNascimento',l:'Nascimento',t:'date'},{k:'tipoSanguineo',l:'Tipo sanguíneo',t:'sel',o:[['','Não sei'],...['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(x=>[x,x])]},{k:'planoSaude',l:'Plano / Cartão SUS'},{k:'alergias',l:'⚠️ Alergias graves',t:'area',w:1},{k:'condicoesSaude',l:'Condições pré-existentes',t:'area',w:1},{k:'observacoesMedicas',l:'Observações para socorristas',t:'area',w:1},{k:'endereco',l:'Endereço (rua e nº)',w:1},{k:'complemento',l:'Complemento'},{k:'bairro',l:'Bairro'},{k:'cidade',l:'Cidade',w:1}],S.prof,o=>{S.prof={...S.prof,...o};put('prof');render();toast('Perfil salvo!','ok')},'Usado no pedido do WhatsApp e na ficha SOS.')}
-function ctForm(){form('Novo contato de emergência',[{k:'nome',l:'Nome',r:1,w:1},{k:'parentesco',l:'Relação',p:'Esposa, médico…'},{k:'telefone',l:'Telefone',t:'tel',r:1},{k:'whatsapp',l:'WhatsApp (se diferente)',t:'tel',w:1}],{},o=>{const c=S.prof.contatosEmergencia||[];c.push({id:uid('em'),nome:o.nome,parentesco:o.parentesco,telefone:o.telefone.replace(/\D/g,''),whatsapp:fone(o.whatsapp||o.telefone),isPrincipal:!c.length});S.prof.contatosEmergencia=c;put('prof');sos()})}
-/* ---------- ações ---------- */
-const A={
-tab(d){tab=d.t;render();scrollTo(0,0)},close:closeM,sos,medForm:d=>medForm(d.id),phForm:d=>phForm(d.id),noteForm:d=>noteForm(d.id),profForm,ctForm,
-addt(d,b){const s=document.createElement('span');s.innerHTML='<input type="time" value="12:00"><button type="button" class="x" data-a="rmt">×</button>';b.before(s)},rmt(d,b){b.parentNode.remove()},
-take(d){const m=byId(d.id);if(!m||taken(d.id,d.h))return;S.logs.push({id:uid('log'),medicationId:d.id,horario:d.h,data:today(),tomadoEm:iso()});m.estoqueAtual=Math.max(0,m.estoqueAtual-(m.dosePorVez||1));put('logs');put('meds');if(S.set.soundEnabled)chime([523,659,1046]);toast('Dose de '+m.nome+' registrada!','ok');render()},
-undo(d){const m=byId(d.id);S.logs=S.logs.filter(l=>!(l.medicationId===d.id&&l.horario===d.h&&l.data===today()));if(m)m.estoqueAtual+=m.dosePorVez||1;put('logs');put('meds');toast('Registro desfeito. Estoque corrigido.');render()},
-medDel(d){if(confirm('Excluir este remédio?')){S.meds=S.meds.filter(m=>m.id!==d.id);put('meds');render()}},
-restock(d){const m=byId(d.id);form('Repor estoque',[{k:'q',l:'Unidades a adicionar (atual: '+m.estoqueAtual+')',t:'number',w:1}],{q:10},o=>{m.estoqueAtual+=Math.max(1,o.q||1);m.atualizadoEm=iso();put('meds');render();toast('Estoque de '+m.nome+' atualizado!','ok')})},
-ordMed(d){initP();P.sel[d.id]=P.sel[d.id]||1;const m=byId(d.id);if(m?.farmaciaId&&S.ph.some(p=>p.id===m.farmaciaId))P.ph=m.farmaciaId;tab='pedir';render();scrollTo(0,0)},
-mf(d){Q.f=d.f;render()},nc(d){Q.c=d.c;render()},
-psel(d,b,e){if(e.target.closest('.qty'))return;if(P.sel[d.id])delete P.sel[d.id];else P.sel[d.id]=1;P.manual=false;render()},
-pq(d){const n=(P.sel[d.id]||1)+ +d.d;if(n<1)delete P.sel[d.id];else P.sel[d.id]=n;P.manual=false;render()},
-lowAdd(){S.meds.filter(m=>st(m).s!=='ok').forEach(m=>P.sel[m.id]=P.sel[m.id]||1);P.manual=false;render();toast('Estoque baixo adicionado ao pedido.','ok')},
-prst(){P.manual=false;render()},
-psend(){const p=S.ph.find(x=>x.id===P.ph);if(!p)return toast('Cadastre e selecione uma farmácia.','warn');if(!Object.keys(P.sel).length)return toast('Selecione ao menos um item.','warn');open(wa(p.whatsapp,curMsg()),'_blank')},
-pcopy(){copy(curMsg(),'Mensagem copiada!')},
-npin(d){const n=S.notes.find(x=>x.id===d.id);n.fixado=!n.fixado;put('notes');render()},ndel(d){if(confirm('Excluir anotação?')){S.notes=S.notes.filter(x=>x.id!==d.id);put('notes');render()}},
-ncopy(d){const n=S.notes.find(x=>x.id===d.id);copy(n.titulo+'\n\n'+n.conteudo)},nwa(d){const n=S.notes.find(x=>x.id===d.id);open(wa('','*'+n.titulo+'*\n\n'+n.conteudo),'_blank')},
-phdef(d){S.ph.forEach(p=>p.isDefault=p.id===d.id);put('ph');render()},phdel(d){if(confirm('Excluir farmácia?')){S.ph=S.ph.filter(p=>p.id!==d.id);if(S.ph.length&&!S.ph.some(p=>p.isDefault))S.ph[0].isDefault=true;put('ph');render()}},
-ctDel(d){S.prof.contatosEmergencia=S.prof.contatosEmergencia.filter(c=>c.id!==d.id);put('prof');sos()},sosCopy(){copy(sos.t,'Ficha copiada!')},
-th(d){S.set.theme=d.v;put('set');theme();render()},dark(){S.set.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';put('set');theme();render()},
-async ntest(){if(!('Notification'in window))return toast('Seu navegador não suporta notificações.','warn');if(await Notification.requestPermission()==='granted'){notify('💊 ReMed: teste','{}'&&{body:'Notificações ativas!'});toast('Notificação enviada!','ok')}else toast('Permissão negada no navegador.','warn');render()},
-ics,gtest(){hook('test')},gsync(){hook('sync')},pix(){copy(PIX,'Chave PIX copiada!')},
-exp(){dl('remed-backup-'+today()+'.json',JSON.stringify({version:'2026.1',exportDate:iso(),medications:S.meds,doseLogs:S.logs,pharmacies:S.ph,profile:S.prof,notes:S.notes,settings:S.set},null,2),'application/json')},
-imp(){$('#imp').click()},
-demoOn(){if(confirm('Substituir seus dados pelos exemplos?')){demo();load();render();toast('Exemplos carregados.','ok')}},
-demoOff(){if(confirm('Remover os exemplos e começar do zero?')){S.meds=[];S.ph=[];S.notes=[];S.logs=[];S.prof={...DP};['meds','ph','notes','logs','prof'].forEach(put);S.demo=false;localStorage.setItem(K.demo,'false');render();toast('Tudo limpo. Cadastre seus remédios!','ok')}},
-wipe(){if(confirm('Apagar TODOS os dados deste navegador? Isso não pode ser desfeito.')){Object.values(K).forEach(k=>localStorage.removeItem(k));load();render()}},
-async install(){if(IP){IP.prompt();IP=null}else toast('iPhone: Compartilhar › Adicionar à Tela de Início. Android: menu ⋮ › Instalar app.')}};
-document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.tagName==='A'&&b.getAttribute('href')==='#')e.preventDefault();A[b.dataset.a]?.(b.dataset,b,e)});
-const I={q(t){Q.m=t.value;$('#ml').innerHTML=medList()},nq(t){Q.n=t.value;const f=$('#nl');render();const i=$('[data-i=nq]');i.focus();i.setSelectionRange(99,99)},
-pph(t){P.ph=t.value;},pnome(t){P.nome=t.value;if(!P.manual)$('#pmsg').value=buildMsg()},pnote(t){P.note=t.value;if(!P.manual)$('#pmsg').value=buildMsg()},paddr(t){P.addr=t.checked;if(!P.manual)$('#pmsg').value=buildMsg()},pmsg(t){P.msg=t.value;P.manual=true},
-snd(t){S.set.soundEnabled=t.checked;put('set')},async ntf(t){if(t.checked&&'Notification'in window&&Notification.permission==='default')await Notification.requestPermission();S.set.notificationEnabled=t.checked;put('set');render()},
-gurl(t){S.set.googleCalendar.scriptUrl=t.value;put('set')},gauto(t){S.set.googleCalendar.autoSyncOnSave=t.checked;put('set')}};
-document.addEventListener('input',e=>{const f=I[e.target.dataset.i];if(f&&e.target.type!=='checkbox'&&e.target.tagName!=='SELECT')f(e.target)});
-document.addEventListener('change',e=>{const f=I[e.target.dataset.i];if(f&&(e.target.type==='checkbox'||e.target.tagName==='SELECT'))f(e.target)});
-$('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(Array.isArray(j.medications))S.meds=j.medications;if(Array.isArray(j.doseLogs))S.logs=j.doseLogs;if(Array.isArray(j.pharmacies))S.ph=j.pharmacies;if(Array.isArray(j.notes))S.notes=j.notes;if(j.profile)S.prof={...DP,...j.profile};if(j.settings)S.set={...DS,...j.settings,googleCalendar:{...DS.googleCalendar,...(j.settings.googleCalendar||{})}};['meds','logs','ph','notes','prof','set'].forEach(put);localStorage.setItem(K.demo,'false');load();theme();render();toast('Backup restaurado!','ok')}catch(x){toast('Arquivo inválido.','warn')}};r.readAsText(f);e.target.value=''};
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();IP=e});
-addEventListener('online',()=>toast('Conectado à internet.','ok'));addEventListener('offline',()=>toast('Modo offline — seus dados estão salvos no aparelho.','warn'));
-const nav=T.map(t=>'<button class="nv" data-a="tab" data-t="'+t[0]+'"><span>'+t[1]+'</span>'+t[2]+'</button>').join('');$('#bnav').innerHTML=nav;$('#snav').innerHTML=nav;
-load();theme();render();due();setInterval(due,15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){render();due()}});
-if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
-</script>
+  <div id="toastOk" class="toast toast-ok" role="status">✓ <span id="toastOkMsg"></span></div>
+  <div id="toastErr" class="toast toast-err" role="alert">× <span id="toastErrMsg"></span></div>
+  <div id="toastInfo" class="toast toast-info" role="status">i <span id="toastInfoMsg"></span></div>
+  <div id="toastWarn" class="toast toast-warn" role="status">! <span id="toastWarnMsg"></span></div>
+
+  <div id="installBanner" class="install-banner" aria-live="polite">
+    <div class="install-banner-head"><div class="install-icon">↓</div><div><strong>Instalar ReMed</strong><span>Acesso rápido e funcionamento offline</span></div><button class="icon-button" onclick="hideInstallBanner()" aria-label="Fechar">×</button></div>
+    <p><b>Privado e gratuito.</b> Seus dados ficam somente neste aparelho.</p>
+    <div class="install-actions"><button class="button button-primary" onclick="doInstall()">Instalar no aparelho</button><button class="button button-muted" onclick="hideInstallBanner()">Agora não</button></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand-lockup" href="../" aria-label="Voltar para a apresentação do ReMed"><img src="./assets/remed-logo.png" alt="" class="brand-logo"><span class="brand-copy"><strong id="userNameDisplayHeader">ReMed</strong><small id="dateDisplayHeader">Carregando...</small></span></a>
+    <div class="topbar-actions"><button class="icon-pill" id="btnInstall" onclick="showInstallBanner()" title="Instalar aplicativo">↓ <span>Instalar</span></button><button class="icon-pill" onclick="compartilhar()" title="Copiar link">↗ <span>Compartilhar</span></button><button class="icon-pill settings-button" onclick="abrirAjustes()" title="Abrir ajustes">⚙ <span>Ajustes</span></button></div>
+  </header>
+
+  <main class="app-wrap">
+    <section id="viewHome" class="tab-pane active">
+      <section class="welcome-card"><div class="welcome-copy"><span class="section-kicker">Seu painel de hoje</span><h1>Tratamento organizado, <em>um passo de cada vez.</em></h1><p id="dateDisplay">Carregando...</p></div><div class="welcome-mark" aria-hidden="true">✚</div><div class="summary-grid" aria-label="Resumo dos medicamentos"><div class="summary-item"><strong id="totalMeds">0</strong><span>Remédios</span></div><div class="summary-item summary-alert"><strong id="criticalCount">0</strong><span>Críticos</span></div><span id="warningCount" hidden>0</span></div></section>
+      <section class="section-block"><div class="section-heading"><div><span class="section-kicker">Atalhos</span><h2>O que você precisa fazer?</h2></div></div><div class="quick-grid quick-grid-wide"><button class="quick-card quick-card-primary" onclick="openModal('modalNovoMed')"><span class="quick-icon">＋</span><span class="quick-title">Novo remédio</span><span class="quick-desc">Cadastrar dose, horário e estoque</span></button><button class="quick-card" onclick="openPedido()"><span class="quick-icon">↗</span><span class="quick-title">Fazer pedido</span><span class="quick-desc">Montar uma mensagem para o WhatsApp</span></button><button class="quick-card" onclick="switchView('viewFarmacias')"><span class="quick-icon">⌂</span><span class="quick-title">Farmácias</span><span class="quick-desc">Gerenciar contatos de confiança</span></button><button class="quick-card" onclick="switchView('viewAvisos')"><span class="quick-icon">!</span><span class="quick-title">Ver avisos</span><span class="quick-desc">Conferir estoques que precisam de atenção</span></button></div></section>
+      <section class="section-block"><div class="section-heading"><div><span class="section-kicker">Acompanhe</span><h2>Meus remédios</h2></div><button class="button button-small button-primary" onclick="openModal('modalNovoMed')">＋ Novo</button></div><div id="medsList"></div></section>
+      <section class="section-block reminders-block"><div class="section-heading"><div><span class="section-kicker">Rotina</span><h2>Lembretes de hoje</h2></div></div><div class="panel" id="lembretesHoje"></div></section>
+      <footer class="app-footer"><a href="../">← Voltar para a apresentação</a><span>ReMed · privado por padrão</span></footer>
+    </section>
+
+    <section id="viewFarmacias" class="tab-pane"><div class="page-intro"><div><span class="section-kicker">Compras</span><h1>Farmácias</h1><p>Salve seus contatos favoritos para pedir reposições com menos etapas.</p></div><button class="button button-primary" onclick="openModal('modalNovaFarmacia')">＋ Nova farmácia</button></div><div id="farmaciasList"></div><div class="empty-note"><strong>Seus contatos ficam no aparelho.</strong><span>Nenhum dado é enviado até você escolher abrir o WhatsApp.</span></div></section>
+
+    <section id="viewAvisos" class="tab-pane"><div class="page-intro"><div><span class="section-kicker">Atenção</span><h1>Central de avisos</h1><p>Veja rapidamente o que precisa ser reposto ou revisado.</p></div></div><div id="avisosList"></div><div class="tips-panel"><span class="tips-icon">i</span><div><strong>Dica para não perder seus dados</strong><p>Exporte um backup sempre que trocar de aparelho. O arquivo JSON guarda seus medicamentos, farmácias e preferências.</p></div><button class="button button-small button-muted" onclick="openModal('modalBackup')">Abrir backup</button></div></section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegação principal"><button class="nav-btn active" id="navHome" onclick="switchView('viewHome')"><i>⌂</i><span>Remédios</span></button><button class="nav-btn" id="navFarmacias" onclick="switchView('viewFarmacias')"><i>＋</i><span>Farmácias</span></button><button class="nav-btn nav-btn-main" id="navPedidoBtn" onclick="openPedido()"><i>↗</i><span>Pedido</span></button><button class="nav-btn" id="navAvisos" onclick="switchView('viewAvisos')"><i>!</i><span>Avisos</span></button><button class="nav-btn" id="navSettings" onclick="abrirAjustes()"><i>⚙</i><span>Ajustes</span></button></nav>
+
+  <div class="modal-overlay" id="modalSettings" onclick="handleOverlayClick(event,'modalSettings')"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-head"><div><span class="section-kicker">Preferências</span><h2>Ajustes</h2></div><button class="modal-close" onclick="closeModal('modalSettings')">×</button></div><div class="profile-card"><div class="profile-avatar">♥</div><div><strong>Seu perfil</strong><span>Usado apenas para personalizar pedidos</span></div></div><div class="frow"><div class="fgrp"><label>Seu nome</label><input id="perfilNomeInput" type="text" placeholder="Como podemos chamar você?"></div><div class="fgrp"><label>Telefone</label><input id="perfilTelInput" type="tel" placeholder="(00) 00000-0000"></div></div><div class="fgrp"><label>Endereço para entrega</label><input id="perfilEndInput" type="text" placeholder="Opcional"></div><button class="button button-primary full-button" onclick="salvarPerfil();closeModal('modalSettings')">Salvar perfil</button><div class="settings-list"><button class="set-item" onclick="openModal('modalPersonalizar');closeModal('modalSettings')"><span class="set-icon">◐</span><span class="set-info"><strong>Personalizar aparência</strong><small>Tema claro/escuro e cor principal</small></span><span class="set-arrow">›</span></button><button class="set-item" onclick="toggleNotificacoes()"><span class="set-icon" id="notifIcon">🔕</span><span class="set-info"><strong id="notifLabel">Notificações desativadas</strong><small id="notifSub">Toque para ativar alertas no aparelho</small></span><span class="set-arrow">›</span></button><button class="set-item" onclick="openModal('modalBackup');closeModal('modalSettings')"><span class="set-icon">↓</span><span class="set-info"><strong>Backup de dados</strong><small>Exportar ou restaurar seu arquivo</small></span><span class="set-arrow">›</span></button><button class="set-item" onclick="openModal('modalSobre');closeModal('modalSettings')"><span class="set-icon">i</span><span class="set-info"><strong>Sobre o ReMed</strong><small>Privacidade, versão e apoio</small></span><span class="set-arrow">›</span></button></div></div></div>
+
+  <div class="modal-overlay" id="modalPersonalizar" onclick="handleOverlayClick(event,'modalPersonalizar')"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-head"><div><span class="section-kicker">Aparência</span><h2>Personalizar</h2></div><button class="modal-close" onclick="closeModal('modalPersonalizar')">×</button></div><div class="fgrp"><label>Cor principal</label><input type="color" id="corPrincipal" value="#0c766b" class="color-input"></div><button class="set-item setting-action" onclick="toggleTheme()"><span class="set-icon" id="themeIcon">☾</span><span class="set-info"><strong id="themeLabel">Modo escuro</strong><small>Alternar entre tema claro e escuro</small></span><span class="set-arrow">›</span></button><div class="modal-actions"><button class="button button-muted" onclick="closeModal('modalPersonalizar')">Fechar</button></div></div></div>
+
+  <div class="modal-overlay" id="modalBackup" onclick="handleOverlayClick(event,'modalBackup')"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-head"><div><span class="section-kicker">Segurança</span><h2>Backup local</h2></div><button class="modal-close" onclick="closeModal('modalBackup')">×</button></div><div class="backup-callout"><span>✓</span><p>O backup é um arquivo no seu aparelho. Ele não é enviado para nenhum servidor.</p></div><button class="button button-primary full-button" onclick="exportarDados();closeModal('modalBackup')">↓ Exportar meus dados</button><label class="file-button button button-muted full-button" for="importFile">↑ Restaurar um backup<input id="importFile" type="file" accept="application/json,.json"></label><button class="danger-link" onclick="limparTudo()">Apagar todos os dados deste aparelho</button></div></div>
+
+  <div class="modal-overlay" id="modalSobre" onclick="handleOverlayClick(event,'modalSobre')"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-head"><div><span class="section-kicker">ReMed</span><h2>Sobre o app</h2></div><button class="modal-close" onclick="closeModal('modalSobre')">×</button></div><div class="about-hero"><img src="./assets/remed-logo.png" alt="ReMed"><div><strong>Organização sem complicação.</strong><span>Grátis · privado · offline</span></div></div><p class="modal-copy">O ReMed ajuda você a acompanhar medicamentos, estoques, farmácias e pedidos. Ele não substitui orientação médica, receita ou acompanhamento profissional.</p><a class="button button-muted full-button" href="../">Conhecer a apresentação</a><a class="support-link" href="https://link.mercadopago.com.br/saulomgg" target="_blank" rel="noopener noreferrer">Apoiar o projeto ↗</a></div></div>
+
+  <div class="modal-overlay" id="modalNovoMed" onclick="handleOverlayClick(event,'modalNovoMed')"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-head"><div><span class="section-kicker">Seu tratamento</span><h2 id="medModalTitle">Novo remédio</h2></div><button class="modal-close" onclick="closeModal('modalNovoMed')">×</button></div><form id="formNovoMed"><div class="fgrp"><label>Nome do medicamento *</label><input type="text" id="medNome" placeholder="Ex.: Losartana, Metformina..." required autocomplete="off"></div><div class="frow"><div class="fgrp"><label>Dosagem</label><input type="text" id="medMg" placeholder="Ex.: 50 mg"></div><div class="fgrp"><label>Fabricante</label><input type="text" id="medFabricante" placeholder="Opcional"></div></div><div class="frow"><div class="fgrp"><label>Horário</label><input type="time" id="medHorario"></div><div class="fgrp"><label>Início *</label><input type="date" id="medInicio" required></div></div><div class="frow"><div class="fgrp"><label>Doses por dia</label><input type="number" id="medDoseDia" min="1" max="10" value="1"></div><div class="fgrp"><label>Total na caixa</label><input type="number" id="medTotal" min="1" value="30"></div></div><div class="fgrp"><label>Observações</label><textarea id="medObs" placeholder="Tomar com água, em jejum..."></textarea></div><button type="submit" class="button button-primary full-button">Salvar remédio</button></form></div></div>
+
+  <div class="modal-overlay" id="modalNovaFarmacia" onclick="handleOverlayClick(event,'modalNovaFarmacia')"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-head"><div><span class="section-kicker">Compras</span><h2>Nova farmácia</h2></div><button class="modal-close" onclick="closeModal('modalNovaFarmacia')">×</button></div><form id="formNovaFarmacia"><div class="fgrp"><label>Nome da farmácia *</label><input type="text" id="farmNome" placeholder="Ex.: Farmácia Popular" required autocomplete="off"></div><div class="fgrp"><label>WhatsApp com DDD *</label><input type="tel" id="farmWhats" placeholder="11999999999" required></div><div class="fgrp"><label>Endereço</label><input type="text" id="farmEndereco" placeholder="Opcional"></div><button type="submit" class="button button-primary full-button">Salvar farmácia</button></form></div></div>
+
+  <div class="modal-overlay" id="modalPedido" onclick="handleOverlayClick(event,'modalPedido')"><div class="modal-sheet"><div class="modal-handle"></div><div class="modal-head"><div><span class="section-kicker">Reposição</span><h2>Fazer pedido</h2></div><button class="modal-close" onclick="closeModal('modalPedido')">×</button></div><div class="step-tabs"><button class="step-tab active" id="stepTab1" onclick="_pedidoStep=1;renderPedidoStep()">1 · Remédios</button><button class="step-tab" id="stepTab2" onclick="_pedidoStep=2;renderPedidoStep()">2 · Farmácia</button><button class="step-tab" id="stepTab3" onclick="_pedidoStep=3;renderPedidoStep()">3 · Revisar</button></div><div id="pedidoStep1"><p class="helper-text">Selecione os remédios que deseja incluir. Itens com estoque baixo aparecem destacados.</p><div id="pedidoMeds"></div></div><div id="pedidoStep2" hidden><div id="pedidoFarmacias"></div></div><div id="pedidoStep3" hidden><div class="fgrp"><label>Revise a mensagem antes de enviar</label><textarea id="pedidoMsgEdit" class="message-editor"></textarea></div><div id="pedidoPreview" hidden></div></div><div class="modal-actions"><button class="button button-muted" id="btnPedidoAntes" onclick="pedidoAntes()">← Anterior</button><button class="button button-primary" id="btnPedidoProx" onclick="pedidoProxOuEnviar()">Próximo →</button></div></div></div>
+
+  <script src="./js/storage.js"></script><script src="./js/ui.js"></script><script src="./js/auth.js"></script><script src="./js/app.js"></script>
+  <script>function pedidoProxOuEnviar(){if(_pedidoStep<3){pedidoProx();}else{enviarPedidoWhatsApp();}}document.addEventListener('DOMContentLoaded',()=>{const today=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});const nice=today.charAt(0).toUpperCase()+today.slice(1);['dateDisplay','dateDisplayHeader'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=nice;});});</script>
 </body>
 </html>
