@@ -1,6 +1,8 @@
 # ReMed
 
-Site e aplicativo para organizar medicamentos, estoques, farmácias e pedidos via WhatsApp.
+Site e aplicativo para organizar medicamentos, estoques, farmácias, pedidos via WhatsApp, ficha médica e agenda de doses.
+
+O app mantém no aparelho a ficha médica (tipo sanguíneo, alergias, condições, orientações médicas e contato de emergência), permite registrar o que o médico orientou em cada medicamento e exporta os horários para um arquivo `.ics` compatível com calendários de celular e computador.
 
 ## Publicar no GitHub Pages
 
@@ -14,3 +16,5 @@ Site e aplicativo para organizar medicamentos, estoques, farmácias e pedidos vi
 A apresentação abre na raiz e o aplicativo fica em `/app/`. Os dados do aplicativo permanecem no navegador do usuário, sem cadastro e sem servidor.
 
 O ReMed é uma ferramenta de organização e não substitui orientação médica, receita ou acompanhamento profissional.
+
+O apoio voluntário usa o Mercado Pago: https://link.mercadopago.com.br/saulomgg

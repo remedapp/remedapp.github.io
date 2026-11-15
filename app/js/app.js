@@ -93,7 +93,7 @@ function renderMeds() {
           <span>Horário</span>
           <span>${med.horario || 'Não definido'}</span>
         </div>
-        ${med.obs ? `<div class="med-detail-row"><span>Obs.</span><span style="text-align:right;max-width:60%">${escHtml(med.obs)}</span></div>` : ''}
+        ${med.obs ? `<div class="med-detail-row"><span>Obs.</span><span style="text-align:right;max-width:60%">${escHtml(med.obs)}</span></div>` : ''}${med.orientacao ? `<div class="med-detail-row"><span>Orientação médica</span><span style="text-align:right;max-width:60%">${escHtml(med.orientacao)}</span></div>` : ''}
         <div class="med-actions">
           <button class="pill-btn pill-btn-warning" onclick="reporEstoque(${med.id})">📦 Repor Estoque</button>
           <button class="pill-btn pill-btn-ghost"   onclick="editarMed(${med.id})">✏️ Editar</button>
@@ -147,6 +147,7 @@ function setupFormMed() {
       doseDia:    parseInt(document.getElementById('medDoseDia').value) || 1,
       total:      parseInt(document.getElementById('medTotal').value) || 30,
       obs:        document.getElementById('medObs').value.trim(),
+      orientacao: document.getElementById('medOrientacao').value.trim(),
     };
     const meds = storage.meds();
     if (id) {
@@ -178,6 +179,7 @@ function editarMed(id) {
   document.getElementById('medDoseDia').value    = med.doseDia || 1;
   document.getElementById('medTotal').value      = med.total || 30;
   document.getElementById('medObs').value        = med.obs || '';
+  document.getElementById('medOrientacao').value = med.orientacao || '';
   openModal('modalNovoMed');
 }
 
@@ -469,6 +471,80 @@ function renderAvisos() {
 }
 
 // ─────────────────────────────────────────
+// FICHA MÉDICA E AGENDA
+// ─────────────────────────────────────────
+
+function abrirFichaMedica() {
+  const p = storage.perfil();
+  const values = {
+    fichaSangue: p.tipoSanguineo || '', fichaNascimento: p.dataNascimento || '',
+    fichaAlergias: p.alergias || '', fichaCondicoes: p.condicoesSaude || '',
+    fichaPlano: p.planoSaude || '', fichaEmergencia: p.contatoEmergencia || '',
+    fichaOrientacoes: p.observacoesMedicas || ''
+  };
+  Object.entries(values).forEach(([id, value]) => { const el=document.getElementById(id); if(el) el.value=value; });
+  openModal('modalFichaMedica');
+}
+
+function salvarFichaMedica(e) {
+  if (e) e.preventDefault();
+  const p = storage.perfil();
+  Object.assign(p, {
+    tipoSanguineo: document.getElementById('fichaSangue')?.value || '',
+    dataNascimento: document.getElementById('fichaNascimento')?.value || '',
+    alergias: document.getElementById('fichaAlergias')?.value.trim() || '',
+    condicoesSaude: document.getElementById('fichaCondicoes')?.value.trim() || '',
+    planoSaude: document.getElementById('fichaPlano')?.value.trim() || '',
+    contatoEmergencia: document.getElementById('fichaEmergencia')?.value.trim() || '',
+    observacoesMedicas: document.getElementById('fichaOrientacoes')?.value.trim() || ''
+  });
+  storage.set(KEY_PERFIL, p);
+  closeModal('modalFichaMedica');
+  toast('♥ Ficha médica salva neste aparelho!', 'ok');
+}
+
+function copiarFichaEmergencia() {
+  const p = storage.perfil();
+  const meds = storage.meds().map(m => `• ${m.nome}${m.mg ? ' ' + m.mg : ''}`).join('\n') || 'Nenhum medicamento cadastrado';
+  const ficha = `FICHA MÉDICA DE EMERGÊNCIA — ReMed\nPaciente: ${p.nome || 'Não informado'}\nTipo sanguíneo: ${p.tipoSanguineo || 'Não informado'}\nAlergias: ${p.alergias || 'Nenhuma informada'}\nCondições de saúde: ${p.condicoesSaude || 'Não informado'}\nPlano/SUS: ${p.planoSaude || 'Não informado'}\nContato de emergência: ${p.contatoEmergencia || 'Não informado'}\nOrientações médicas: ${p.observacoesMedicas || 'Nenhuma informada'}\nMedicamentos em uso:\n${meds}`;
+  const done = () => toast('Ficha de emergência copiada!', 'ok');
+  if (navigator.clipboard) navigator.clipboard.writeText(ficha).then(done).catch(() => fallbackCopy(ficha));
+  else fallbackCopy(ficha);
+}
+
+function fallbackCopy(text) { const input=document.createElement('textarea'); input.value=text; document.body.appendChild(input); input.select(); document.execCommand('copy'); input.remove(); toast('Ficha de emergência copiada!', 'ok'); }
+
+function abrirAgenda() {
+  renderAgendaMedica();
+  openModal('modalAgenda');
+}
+
+function renderAgendaMedica() {
+  const el = document.getElementById('agendaMedicaList');
+  if (!el) return;
+  const meds = storage.meds().filter(m => m.horario || (m.horarios && m.horarios.length));
+  if (!meds.length) { el.innerHTML='<div class="empty" style="padding:18px 8px"><span class="empty-emo">⏰</span><p>Nenhum remédio com horário cadastrado.</p></div>'; return; }
+  el.innerHTML = meds.map(m => `<div class="med-detail-row"><span>💊 ${escHtml(m.nome)}</span><strong>${escHtml((m.horarios || [m.horario]).filter(Boolean).join(', '))}</strong></div>`).join('');
+}
+
+function exportarCalendarioICS() {
+  const meds = storage.meds().filter(m => m.horario || (m.horarios && m.horarios.length));
+  if (!meds.length) { toast('Cadastre pelo menos um horário antes de exportar.', 'warn'); return; }
+  const now = new Date();
+  const date = now.toISOString().slice(0,10).replace(/-/g,'');
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ReMed//Agenda de doses//PT-BR','CALSCALE:GREGORIAN'];
+  meds.forEach(m => (m.horarios || [m.horario]).filter(Boolean).forEach(h => {
+    const [hh, mm] = h.split(':');
+    const uid = `remed-${m.id}-${h.replace(':','')}`;
+    lines.push('BEGIN:VEVENT',`UID:${uid}@remedapp.github.io`,`DTSTAMP:${date}T000000Z`,`DTSTART:${date}T${hh}${mm}00`,`RRULE:FREQ=DAILY`,`SUMMARY:ReMed — ${m.nome}${m.mg ? ' '+m.mg : ''}`,`DESCRIPTION:${(m.orientacao || m.obs || 'Horário do medicamento').replace(/\n/g,'\\n')}`,'END:VEVENT');
+  }));
+  lines.push('END:VCALENDAR');
+  const blob = new Blob([lines.join('\r\n')], {type:'text/calendar;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='agenda-remed.ics'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast('📅 Agenda .ICS exportada!', 'ok');
+}
+
+// ─────────────────────────────────────────
 // BACKUP
 // ─────────────────────────────────────────
 
@@ -530,6 +606,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initNotificacoes();
   setupFormMed();
   setupFormFarmacia();
+  const fichaForm = document.getElementById('formFichaMedica');
+  if (fichaForm) fichaForm.addEventListener('submit', salvarFichaMedica);
   renderMeds();
   renderLembretes();
 

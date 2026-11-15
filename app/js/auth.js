@@ -17,7 +17,7 @@ function salvarPerfil() {
   const nome     = document.getElementById('perfilNomeInput')?.value.trim()  || '';
   const endereco = document.getElementById('perfilEndInput')?.value.trim()   || '';
   const telefone = document.getElementById('perfilTelInput')?.value.trim()   || '';
-  storage.set(KEY_PERFIL, { nome, endereco, telefone });
+  storage.set(KEY_PERFIL, { ...storage.perfil(), nome, endereco, telefone });
   _atualizarHeaderNome();
   toast('✅ Perfil salvo!', 'ok');
 }
