@@ -1,0 +1,5 @@
+{
+  "name": "RemedApp",
+  "description": "Aplicativo gratuito, privado e offline para organizar medicamentos, anotações médicas, medições e agenda.",
+  "requestFramePermissions": []
+}

@@ -18,3 +18,7 @@ A apresentação abre na raiz e o aplicativo fica em `/app/`. Os dados do aplica
 O ReMed é uma ferramenta de organização e não substitui orientação médica, receita ou acompanhamento profissional.
 
 O apoio voluntário usa o Mercado Pago: https://link.mercadopago.com.br/saulomgg
+
+## Atualização do app
+
+A pasta `/app/` é gerada a partir do projeto React em `/app-source/`. O aplicativo novo possui agenda, anotações médicas, medições, ficha de saúde, apoio voluntário e armazenamento local. O service worker e o manifesto permitem continuar usando o app sem internet depois do primeiro acesso; sincronização opcional com Google Apps Script, links externos e WhatsApp dependem de conexão.
