@@ -1,24 +1,29 @@
-# ReMed
+# RemedApp
 
-Site e aplicativo para organizar medicamentos, estoques, farmácias, pedidos via WhatsApp, ficha médica e agenda de doses.
+Aplicativo gratuito, privado e offline para organizar medicamentos, farmácias, pedidos, anotações médicas, medições, hidratação e agenda.
 
-O app mantém no aparelho a ficha médica (tipo sanguíneo, alergias, condições, orientações médicas e contato de emergência), permite registrar o que o médico orientou em cada medicamento e exporta os horários para um arquivo `.ics` compatível com calendários de celular e computador.
+## Publicação no GitHub Pages
 
-## Publicar no GitHub Pages
+A raiz contém o site oficial e a pasta `/app/` contém o aplicativo publicado. O código-fonte do app fica em `/app-source/`.
 
-1. Crie ou abra um repositório no GitHub.
-2. Extraia o conteúdo deste ZIP e envie os arquivos para a raiz do repositório.
-3. Acesse **Settings > Pages**.
-4. Em **Build and deployment**, selecione **Deploy from a branch**.
-5. Escolha a branch `main` e a pasta `/ (root)`.
-6. Salve e aguarde o endereço do site.
+```bash
+git add -A
+git commit -m "Atualiza RemedApp com farmácias e instalação PWA"
+git pull --rebase origin main
+git push origin main
+```
 
-A apresentação abre na raiz e o aplicativo fica em `/app/`. Os dados do aplicativo permanecem no navegador do usuário, sem cadastro e sem servidor.
+Depois, o app fica disponível em `https://remedapp.github.io/app/`.
 
-O ReMed é uma ferramenta de organização e não substitui orientação médica, receita ou acompanhamento profissional.
+## Recursos
 
-O apoio voluntário usa o Mercado Pago: https://link.mercadopago.com.br/saulomgg
+- Horários e medicamentos.
+- Sinais, hidratação e anotações médicas.
+- Cadastro de farmácias e montagem de pedidos por WhatsApp.
+- Perfil de saúde e resumo para consulta.
+- Apoio voluntário pelo Mercado Pago.
+- Instalação como aplicativo pelo botão **Instalar app**.
+- Armazenamento local e funcionamento offline depois do primeiro acesso.
+- Sincronização opcional com Google Agenda, que depende de internet.
 
-## Atualização do app
-
-A pasta `/app/` é gerada a partir do projeto React em `/app-source/`. O aplicativo novo possui agenda, anotações médicas, medições, ficha de saúde, apoio voluntário e armazenamento local. O service worker e o manifesto permitem continuar usando o app sem internet depois do primeiro acesso; sincronização opcional com Google Apps Script, links externos e WhatsApp dependem de conexão.
+Site oficial: https://saulomgg.github.io/

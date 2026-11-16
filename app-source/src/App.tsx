@@ -6,12 +6,14 @@ import {
   Check,
   ClipboardList,
   Clock,
+  Download,
   FileText,
   HeartHandshake,
   Menu,
   Plus,
   RefreshCw,
   Settings,
+  Store,
   ToggleLeft,
   ToggleRight,
   UserRound,
@@ -23,6 +25,7 @@ import {
   HydrationState,
   MedicalNote,
   MedicationItem,
+  PharmacyItem,
   SyncLogEntry,
   TabId,
   UserHealthProfile,
@@ -32,23 +35,27 @@ import {
   DEFAULT_HEALTH_PROFILE,
   DEFAULT_MEDICAL_NOTES,
   DEFAULT_MEDICATIONS,
+  DEFAULT_PHARMACIES,
   DEFAULT_VITALS,
   getTodayIso,
   loadHealthProfile,
   loadHydration,
   loadMedicalNotes,
   loadMedications,
+  loadPharmacies,
   loadSettings,
   loadSyncLogs,
   loadVitals,
   SAMPLE_FORBIDDEN_IDS,
   SAMPLE_MED_IDS,
   SAMPLE_NOTE_IDS,
+  SAMPLE_PHARMACY_IDS,
   SAMPLE_VITAL_IDS,
   saveHealthProfile,
   saveHydration,
   saveMedicalNotes,
   saveMedications,
+  savePharmacies,
   saveSettings,
   saveSyncLogs,
   saveVitals,
@@ -64,14 +71,21 @@ import {
 import { ScheduleView } from './components/ScheduleView';
 import { VitalsTabView } from './components/VitalsTabView';
 import { MedicalNotesView } from './components/MedicalNotesView';
+import { PharmaciesTabView } from './components/PharmaciesTabView';
 import { ProfileTabView } from './components/ProfileTabView';
 import { SummaryTabView } from './components/SummaryTabView';
 import { SettingsTabView } from './components/SettingsTabView';
 import { SupportTabView } from './components/SupportTabView';
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
 function resolveTabFromPath(pathname: string): TabId {
   if (pathname.includes('/app/medicoes')) return TabId.VITALS;
   if (pathname.includes('/app/anotacoes')) return TabId.NOTES;
+  if (pathname.includes('/app/farmacias')) return TabId.PHARMACIES;
   if (pathname.includes('/app/dados')) return TabId.PROFILE;
   if (pathname.includes('/app/resumo')) return TabId.SUMMARY;
   if (pathname.includes('/app/configuracoes')) return TabId.SETTINGS;
@@ -85,6 +99,8 @@ function pathForTab(tab: TabId): string {
       return '/app/medicoes';
     case TabId.NOTES:
       return '/app/anotacoes';
+    case TabId.PHARMACIES:
+      return '/app/farmacias';
     case TabId.PROFILE:
       return '/app/dados';
     case TabId.SUMMARY:
@@ -114,6 +130,9 @@ export default function App() {
     loadHydration()
   );
   const [notes, setNotes] = useState<MedicalNote[]>(() => loadMedicalNotes());
+  const [pharmacies, setPharmacies] = useState<PharmacyItem[]>(() =>
+    loadPharmacies()
+  );
   const [profile, setProfile] = useState<UserHealthProfile>(() =>
     loadHealthProfile()
   );
@@ -124,8 +143,10 @@ export default function App() {
 
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [isPharmacyModalOpen, setIsPharmacyModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   const [feedbackBanner, setFeedbackBanner] = useState<{
     type: 'success' | 'error';
@@ -146,6 +167,20 @@ export default function App() {
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+    const handleAppInstalled = () => setInstallPrompt(null);
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
   }, []);
 
   const navigateToTab = useCallback((tab: TabId) => {
@@ -177,6 +212,10 @@ export default function App() {
   }, [notes]);
 
   useEffect(() => {
+    savePharmacies(pharmacies);
+  }, [pharmacies]);
+
+  useEffect(() => {
     saveHealthProfile(profile);
   }, [profile]);
 
@@ -194,6 +233,16 @@ export default function App() {
     },
     []
   );
+
+  const handleInstallApp = useCallback(async () => {
+    if (installPrompt) {
+      await installPrompt.prompt();
+      await installPrompt.userChoice;
+      setInstallPrompt(null);
+      return;
+    }
+    showFeedback('success', 'Para instalar: abra o menu do navegador e escolha “Instalar app” ou “Adicionar à tela inicial”.');
+  }, [installPrompt, showFeedback]);
 
   const appendLog = useCallback(
     (status: 'success' | 'error', message: string) => {
@@ -346,6 +395,27 @@ export default function App() {
     [showFeedback]
   );
 
+  const handleSavePharmacy = useCallback(
+    (pharmacy: PharmacyItem) => {
+      setPharmacies((prev) => {
+        const exists = prev.some((p) => p.id === pharmacy.id);
+        return exists
+          ? prev.map((p) => (p.id === pharmacy.id ? pharmacy : p))
+          : [...prev, pharmacy];
+      });
+      showFeedback('success', `Farmácia "${pharmacy.name}" salva.`);
+    },
+    [showFeedback]
+  );
+
+  const handleDeletePharmacy = useCallback(
+    (id: string) => {
+      setPharmacies((prev) => prev.filter((p) => p.id !== id));
+      showFeedback('success', 'Farmácia removida.');
+    },
+    [showFeedback]
+  );
+
   const handleToggleSampleData = useCallback(() => {
     const nextEnabled = !settings.useSampleData;
 
@@ -353,6 +423,9 @@ export default function App() {
       setMedications((prev) => prev.filter((m) => !SAMPLE_MED_IDS.has(m.id)));
       setNotes((prev) => prev.filter((n) => !SAMPLE_NOTE_IDS.has(n.id)));
       setVitals((prev) => prev.filter((v) => !SAMPLE_VITAL_IDS.has(v.id)));
+      setPharmacies((prev) =>
+        prev.filter((p) => !SAMPLE_PHARMACY_IDS.has(p.id))
+      );
       setProfile((prev) => ({
         ...prev,
         forbiddenMedications: prev.forbiddenMedications.filter(
@@ -379,6 +452,11 @@ export default function App() {
       setVitals((prev) => {
         const existing = new Set(prev.map((v) => v.id));
         const toAdd = DEFAULT_VITALS.filter((v) => !existing.has(v.id));
+        return [...prev, ...toAdd];
+      });
+      setPharmacies((prev) => {
+        const existing = new Set(prev.map((p) => p.id));
+        const toAdd = DEFAULT_PHARMACIES.filter((p) => !existing.has(p.id));
         return [...prev, ...toAdd];
       });
       setProfile((prev) => {
@@ -524,6 +602,11 @@ export default function App() {
       icon: FileText,
     },
     {
+      id: TabId.PHARMACIES,
+      label: 'Farmácias & Pedidos',
+      icon: Store,
+    },
+    {
       id: TabId.PROFILE,
       label: 'Meus Dados',
       icon: UserRound,
@@ -552,6 +635,8 @@ export default function App() {
       ? 'Sinais & Hidratação'
       : activeTab === TabId.NOTES
       ? 'Anotações Médicas'
+      : activeTab === TabId.PHARMACIES
+      ? 'Farmácias & Pedidos'
       : activeTab === TabId.PROFILE
       ? 'Meus Dados'
       : activeTab === TabId.SUMMARY
@@ -694,14 +779,25 @@ export default function App() {
 
           <div className="shrink-0">
             {activeTab === TabId.SCHEDULE && (
-              <button
-                type="button"
-                onClick={() => setIsScheduleModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-teal-700 hover:bg-teal-800 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-              >
-                <Plus className="w-4 h-4" />
-                Novo Horário
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={handleInstallApp}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                  title="Instalar RemedApp no celular ou computador"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Instalar app
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsScheduleModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-teal-700 hover:bg-teal-800 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  Novo Horário
+                </button>
+              </>
             )}
             {activeTab === TabId.NOTES && (
               <button
@@ -711,6 +807,16 @@ export default function App() {
               >
                 <Plus className="w-4 h-4" />
                 Nova Anotação
+              </button>
+            )}
+            {activeTab === TabId.PHARMACIES && (
+              <button
+                type="button"
+                onClick={() => setIsPharmacyModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-teal-700 hover:bg-teal-800 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                Nova Farmácia
               </button>
             )}
             {activeTab === TabId.SETTINGS && (
@@ -830,6 +936,19 @@ export default function App() {
               onSaveNote={handleSaveNote}
               onDeleteNote={handleDeleteNote}
               onCreateFollowUpReminder={handleCreateFollowUpReminder}
+            />
+          )}
+
+          {activeTab === TabId.PHARMACIES && (
+            <PharmaciesTabView
+              pharmacies={pharmacies}
+              medications={medications}
+              profile={profile}
+              isModalOpen={isPharmacyModalOpen}
+              onOpenModal={() => setIsPharmacyModalOpen(true)}
+              onCloseModal={() => setIsPharmacyModalOpen(false)}
+              onSavePharmacy={handleSavePharmacy}
+              onDeletePharmacy={handleDeletePharmacy}
             />
           )}
 

@@ -2,10 +2,22 @@ export enum TabId {
   SCHEDULE = 'schedule',
   VITALS = 'vitals',
   NOTES = 'notes',
+  PHARMACIES = 'pharmacies',
   PROFILE = 'profile',
   SUMMARY = 'summary',
   SETTINGS = 'settings',
   SUPPORT = 'support',
+}
+
+export interface PharmacyItem {
+  id: string;
+  name: string;
+  whatsapp: string;
+  phone?: string;
+  address: string;
+  openingHours?: string;
+  delivers: boolean;
+  notes?: string;
 }
 
 export type VitalType =

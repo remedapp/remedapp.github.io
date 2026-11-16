@@ -3,6 +3,7 @@ import {
   HydrationState,
   MedicalNote,
   MedicationItem,
+  PharmacyItem,
   SyncLogEntry,
   UserHealthProfile,
   VitalReading,
@@ -139,12 +140,36 @@ const STORAGE_KEYS = {
   profile: 'medagenda_health_profile_v1',
   vitals: 'remedapp_vitals_v1',
   hydration: 'remedapp_hydration_v1',
+  pharmacies: 'remedapp_pharmacies_v1',
 };
 
 export const SAMPLE_MED_IDS = new Set(['med-1', 'med-2', 'med-3', 'med-4']);
 export const SAMPLE_NOTE_IDS = new Set(['note-1', 'note-2', 'note-3']);
 export const SAMPLE_FORBIDDEN_IDS = new Set(['forb-example-1']);
 export const SAMPLE_VITAL_IDS = new Set(['vital-1', 'vital-2', 'vital-3']);
+export const SAMPLE_PHARMACY_IDS = new Set(['pharm-1', 'pharm-2']);
+
+export const DEFAULT_PHARMACIES: PharmacyItem[] = [
+  {
+    id: 'pharm-1',
+    name: 'Farmácia Central do Bairro',
+    whatsapp: '(11) 99999-1111',
+    phone: '(11) 3333-1111',
+    address: 'Av. Brasil, 420 — Centro',
+    openingHours: '07:30 às 22:00',
+    delivers: true,
+    notes: 'Aceita receita digital e convênio Farmácia Popular',
+  },
+  {
+    id: 'pharm-2',
+    name: 'Drogaria Saúde 24h',
+    whatsapp: '(11) 98888-2222',
+    address: 'Rua das Flores, 155',
+    openingHours: '24 horas',
+    delivers: true,
+    notes: 'Entrega rápida por motoboy',
+  },
+];
 
 export const DEFAULT_VITALS: VitalReading[] = [
   {
@@ -323,4 +348,19 @@ export function loadHydration(): HydrationState {
 
 export function saveHydration(hydration: HydrationState): void {
   localStorage.setItem(STORAGE_KEYS.hydration, JSON.stringify(hydration));
+}
+
+export function loadPharmacies(): PharmacyItem[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.pharmacies);
+    if (!raw) return DEFAULT_PHARMACIES;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : DEFAULT_PHARMACIES;
+  } catch {
+    return DEFAULT_PHARMACIES;
+  }
+}
+
+export function savePharmacies(pharmacies: PharmacyItem[]): void {
+  localStorage.setItem(STORAGE_KEYS.pharmacies, JSON.stringify(pharmacies));
 }
